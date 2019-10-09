@@ -42,6 +42,24 @@ Github提供了project board,　实现了kanban board的功能，用来管理自
 
 这样自己的TODO list就方便的建立起来，随时可以访问。同时本周的计划一目了然，而且也能看到之前完成的任务，获得成就感。
 
+## The workflow
+
+github project board一般配合repo使用，在repo建立的issue，在board上会以card形式显示。
+
+首先需要把Project board和你的repo链接起来，可以链接多个: 
+
+{% asset_img link_repo.png %}
+
+点击projects --> settings --> link repo
+
+比如我的Notes repo记录笔记，my_blog_src　repo记录博客源码。当我计划写一篇关于k8s DNS的blog，我就在my_blog_src　repo create一个issue: 
+
+{% asset_img issue.png %}
+
+然后回到project board, 点击右上角的 _add cards_，选中刚才建立的issue(以card形式呈现): Service discovery and DNS blog，直接拖到某列即可。
+
+{% asset_img add_cards.png %}
+
 突然之间变得agile起来了呢，想想都有点小激动 😁
 
 ## Reference
