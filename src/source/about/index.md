@@ -13,9 +13,7 @@ Interested areas:
 
 I can be rached via elitegoblinrb@gmail.com
 
-[Self-Introduction Slide](https://go-talks.appspot.com/github.com/eliteGoblin/Notes/intro/main.slide#1)
-
-
+[Self-Introduction Slide](https://go-talks.appspot.com/github.com/eliteGoblin/talks/self-introduction/main.slide#1)
 
 
 ## Talks
@@ -31,4 +29,6 @@ I can be rached via elitegoblinrb@gmail.com
 
 ## Resume
 
-{% pdf ./index/frank_sun.pdf %}
+can be found [here](https://drive.google.com/file/d/1yrDV53gq-22xehbtI1kmJMJL90cies9i/preview)  
+
+{% pdf https://drive.google.com/file/d/1yrDV53gq-22xehbtI1kmJMJL90cies9i/preview %}
