@@ -60,7 +60,7 @@ url中包含的字符分为:
 
 [RFC 1738](http://www.ietf.org/rfc/rfc1738.txt) 做了规定
 > "...Only alphanumerics [0-9a-zA-Z], the special characters "$-_.+!*'()," [not including the quotes - ed], and reserved characters used for their reserved purposes may be used unencoded within a URL."  
-> "只有字母和数字[0-9a-zA-Z]、一些特殊符号"$-_.+!*'(),"[不包括双引号]、以及某些保留字，才可以不经过编码直接用于URL。"
+> "只有字母和数字[0-9a-zA-Z]、一些特殊符号"\$-_.+!*'(),"[不包括双引号]、以及某些保留字，才可以不经过编码直接用于URL。"
 
 
 当我们需要在url中传送url保留字符时，就需要进行url encode了:

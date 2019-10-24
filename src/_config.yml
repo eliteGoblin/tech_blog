@@ -5,7 +5,7 @@
 # Site
 title: Frank Sun
 subtitle: 胸怀最美好的期望,预做最坏的打算
-description: 拒绝复制,经过思考后的总结才是属于自己的
+description: 拒绝复制,经过思考后的总结才属于自己
 author: eliteGoblin
 language: zh-CN
 timezone:
@@ -112,12 +112,6 @@ search:
   format: html
   limit: 10000
 
-math:
-  engine: 'mathjax' # or 'katex'
-  mathjax:
-    # src: custom_mathjax_source
-    config:
-      # MathJax config
 
 index2_include_index: true
 index2_generator:

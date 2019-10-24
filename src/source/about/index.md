@@ -11,7 +11,7 @@ Interested areas:
 *  Kubernetes
 *  System Architecture on Cloud
 
-I can be rached via elitegoblinrb@gmail.com
+I can be reached via elitegoblinrb@gmail.com
 
 [Self-Introduction Slide](https://go-talks.appspot.com/github.com/eliteGoblin/talks/self-introduction/main.slide#1)
 

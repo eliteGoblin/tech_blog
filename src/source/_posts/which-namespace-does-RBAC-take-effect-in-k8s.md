@@ -12,7 +12,7 @@ description:
 
 ## Preface
 
-最近工作转向k8s，自己比较满意，之前很久就有兴趣，也看完了一本kubernetes up and running, 但并没有进一步深入研究。这次参与公司的k8s cluster升级项目，收获良多，算是正式入门了，看来深入的掌握知识果然还是得learning by doing，压力动力具备，目标导向，才能高效的学习。后续也会退出k8s, istio系列blog。
+最近工作转向k8s，自己比较满意，之前很久就有兴趣，也看完了一本kubernetes up and running, 但并没有进一步深入研究。这次参与公司的k8s cluster升级项目，收获良多，算是正式入门了，看来深入的掌握知识果然还是得learning by doing，压力动力具备，目标导向，才能高效的学习。后续也会推出k8s, istio系列blog。
 
 回归正题，在升级到k8s v1.13时，需要开启RBAC模块提升安全性，对每个service account(以下简称sa)赋予least priviledge。这需要建立特定的role/cluster role，并将其bind到service account。这就涉及到授权作用于哪个namespace的问题(namespace是k8s的一个机制：可以将k8s集群进一步分成子集群，起到隔离的效果)。
 
