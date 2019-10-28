@@ -6,7 +6,10 @@ keywords: [authentication, authorisation]
 description:
 ---
 
+
 ## Preface
+
+生活中，我们应对一系列的身份识别和授权的问题，比如门卫需要检查证件(authentication)，再问你要找谁(authorisation)，比如取钱时的银行卡也是authentication，海关查验护照等等。
 
 在做应用开发时，有时会被权限的问题搞得很烦，不得不花大量的时间处理一系列的 _access denied_，但由于缺乏对权限系统的了解，往往陷入 _keep trying until it works_ 的境地，影响开发效率，解决过程中并没有习得什么系统性知识。  
 

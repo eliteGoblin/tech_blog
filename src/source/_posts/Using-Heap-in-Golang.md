@@ -6,6 +6,9 @@ keywords:
 description:
 ---
 
+<div align="center">
+{% asset_img heap_metaphor.jpg %}
+</div>
 
 ## Preface
 
@@ -94,11 +97,7 @@ array中存储的是heap的level order traversal:
 
 Binary heap同样遵循heap property: 节点"优先级"都比子树的高，因此每次pop都是取头节点。取决有优先级定义: 数值小优先级高的就是小顶堆，反之则是大顶堆。
 
-这里有一个形象的比喻：叠罗汉是小顶堆[^5], 缅怀这篇文章作者，有趣的Vamei大神: 
-
-<div align="center">
-{% asset_img heap_metaphor.jpg %}
-</div>
+这里有一个形象的比喻：叠罗汉是小顶堆[^5]，缅怀这篇文章作者，有趣的Vamei大神，请见文章开篇的图片。
 
 叠罗汉就是一个堆, 图中有三个堆，优先级是人的体重，体重最轻的在顶端，它是小顶堆。
 
