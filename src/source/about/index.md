@@ -18,6 +18,7 @@ I can be reached via elitegoblinrb@gmail.com
 
 ## Talks
 
+[K8s Internal Service Discovery and DNS](https://github.com/eliteGoblin/talks/tree/master/coredns/slide)  
 [Kubernetes_RBAC](https://go-talks.appspot.com/github.com/eliteGoblin/talks/Kubernetes_RBAC/slide/main.slide)  
 [Go Project Layout - Clean Architecture](https://go-talks.appspot.com/github.com/eliteGoblin/talks/clean_architecture/slide/clean_arch.slide)  
 [Microservice Monitoring](https://go-talks.appspot.com/github.com/eliteGoblin/talks/monitoring/slide/main.slide)  
