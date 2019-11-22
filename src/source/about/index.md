@@ -1,6 +1,7 @@
 ---
 title: About Frank Sun
 date: 2018-08-06 09:24:21
+comments: false
 ---
 
 I am currently working at Nearmap's API team, Sydney.  
