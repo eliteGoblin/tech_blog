@@ -24,7 +24,7 @@ var _ = Describe("Book", func() {
 			Author: "Dr. Seuss",
 			Pages:  24,
 		}
-		fmt.Println("top level")
+		fmt.Println("level 1")
 	})
 
 	Describe("Categorizing book length", func() {

@@ -1,4 +1,18 @@
+Ginko不能显示代码中的fmt.Println(...), 但测试代码的fmt.Println是可以显示的.
+go test框架可以显示代码中的fmt.Println, 但是得加 -v
 
+
+*  Golang feature: 允许books和books_test在一个package; 其他不行
+    -  unit test在一个package, bdd在 {package}_test package
+*  BDD, `book_test`, 先import再test, 好处是更BDD, 没有细节
+*  descriptive test suites
+*  术语: context, describe(根节点), BeforeEach, JustBeforeEach, It, 
+    -  Describe, Context and When blocks are functionally equivalent; Describe object或者method; 下面包含When和Context
+*  X和P都是mark成pending, 
+
+力量1点＝25生命
+敏捷3点＝1护甲
+智力1点＝15魔法
 
 
 beforeeach: 

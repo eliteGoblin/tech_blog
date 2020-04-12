@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="9e67b251-d633-429c-8c87-e89cf7cf9e4e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../http_error_handling/main.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../setup/pic.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../src/CNAME" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../src/source/_posts/BDD-1.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../src/source/_posts/BDD-1/Ginkgo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../src/source/_posts/BDD-1/pyramid.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../src/source/_posts/error-propagation-in-HTTP-server.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../src/source/_posts/error-propagation-in-HTTP-server/chain.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../src/source/_posts/error-propagation-in-HTTP-server/exception_java.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/concurrency/src/goroutine/mem.go" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/concurrency/src/goroutine/mem.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/go_reference_type/main.md" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/go_reference_type/main.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/go_testing/TDD.md" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/go_testing/TDD.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/go_testing/go_testing.md" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/go_testing/go_testing.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/go_testing/golang http reuse/main.md" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/go_testing/golang http reuse/main.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/go_testing/golang http reuse/not_close_resp.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/go_testing/golang http reuse/not_close_resp.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/go_testing/golang http reuse/python_http_not_work.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/go_testing/golang http reuse/python_http_not_work.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/go_testing/golang http reuse/reused.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/go_testing/golang http reuse/reused.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/go_testing/golang http reuse/src/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/go_testing/golang http reuse/src/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/go_testing/golang http reuse/src/work_code.go" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/go_testing/golang http reuse/src/work_code.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/go_testing/golang http reuse/wireshark.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/go_testing/golang http reuse/wireshark.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/go_testing/src/coverage.html" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/go_testing/src/coverage.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/go_testing/src/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/go_testing/src/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/go_testing/src/utils/tools.go" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/go_testing/src/utils/tools.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/go_testing/src/utils/tools_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/go_testing/src/utils/tools_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/gomock/main.md" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/gomock/main.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/heap/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/heap/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/heap/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/heap/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/heap/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/heap/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/heap/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/heap/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/heap/priorityqueue/pq.go" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/heap/priorityqueue/pq.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/heap/priorityqueue/pq_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/heap/priorityqueue/pq_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/http param passing in go/main.md" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/http param passing in go/main.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/http_context/main.md" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/http_context/main.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/http_context/src/middle/middle.go" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/http_context/src/middle/middle.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/http_context/src/server/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/http_context/src/server/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/http_context/src/simple_context_example/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/http_context/src/simple_context_example/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/http_context/src/utils/utils.go" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/http_context/src/utils/utils.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/hystrix/main.md" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/hystrix/main.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/hystrix/src/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/hystrix/src/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/hystrix/src/srv_mock/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/hystrix/src/srv_mock/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/protobuf/main.md" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/protobuf/main.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/too many open files/main.md" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/too many open files/main.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/archived/磁盘容量/main.md" beforeDir="false" afterPath="$PROJECT_DIR$/../archived/磁盘容量/main.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/bdd_ginko/.idea/bdd_ginko.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/bdd_ginko.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/bdd_ginko/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/bdd_ginko/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/bdd_ginko/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/bdd_ginko/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/bdd_ginko/books/book.go" beforeDir="false" afterPath="$PROJECT_DIR$/books/book.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/bdd_ginko/books/book_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/books/book_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/bdd_ginko/books/books_suite_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/books/books_suite_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/bdd_ginko/cart/cart.go" beforeDir="false" afterPath="$PROJECT_DIR$/cart/cart.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/bdd_ginko/cart/cart_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/cart/cart_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/bdd_ginko/cart/main.md" beforeDir="false" afterPath="$PROJECT_DIR$/cart/main.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/bdd_ginko/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/bdd_ginko/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/bdd_ginko/main.md" beforeDir="false" afterPath="$PROJECT_DIR$/main.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/blog_sample.md" beforeDir="false" afterPath="$PROJECT_DIR$/../blog_template.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/constant.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/gotorch/main.md" beforeDir="false" afterPath="$PROJECT_DIR$/../gotorch/main.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/main.md" beforeDir="false" afterPath="$PROJECT_DIR$/../main.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/eof/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/eof/client.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/eof/empty.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/eof/empty.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/eof/eof_in_file.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/eof/eof_in_file.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/eof/main.md" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/eof/main.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/eof/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/eof/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/eof/test01/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/eof/test01/client.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/eof/test01/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/eof/test01/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/eof/test02/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/eof/test02/client.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/eof/test02/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/eof/test02/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/main.md" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/main.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/https_go/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/https_go/client.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/https_go/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/https_go/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/https_go/main.md" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/https_go/main.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/https_go/server.crt" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/https_go/server.crt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/https_go/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/https_go/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/https_go/server.key" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/https_go/server.key" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/rsa_demo/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/rsa_demo/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/rsa_demo/private.pem" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/rsa_demo/private.pem" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/rsa_demo/public.pem" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/rsa_demo/public.pem" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/simple_https/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/simple_https/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/simple_https/main.md" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/simple_https/main.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/simple_https/server.crt" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/simple_https/server.crt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/simple_https/server.key" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/simple_https/server.key" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/simple_https/server_bk.key" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/simple_https/server_bk.key" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/tls_go/certs/server.key" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/tls_go/certs/server.key" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/tls_go/certs/server.pem" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/tls_go/certs/server.pem" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/tls_go/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/tls_go/client.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/tls_go/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/tls_go/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/tls_go/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/tls_go/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/tonybai/client.go" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/tonybai/client.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/tonybai/main.md" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/tonybai/main.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/tonybai/server.crt" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/tonybai/server.crt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/tonybai/server.key" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/tonybai/server.key" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/https/src/tonybai/simple_server.go" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/https/src/tonybai/simple_server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/regex in go/main.md" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/regex in go/main.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/vim_reg/grep.md" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/vim_reg/grep.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/vim_reg/main.md" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/vim_reg/main.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/vim_reg/sample.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/vim_reg/sample.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/old stuff/vim_reg/sample_edit.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../old stuff/vim_reg/sample_edit.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/resource/passwd.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/../resource/passwd.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/resource/summary.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/../resource/summary.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/security.md" beforeDir="false" afterPath="$PROJECT_DIR$/../security.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cache/type_conversion/main.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/_config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/_config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/source/CNAME" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/source/CNAME" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/themes/hexo-theme-next/_config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/themes/hexo-theme-next/_config.yml" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/design.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor />
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/books/book.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="38">
+              <caret line="2" column="5" selection-start-line="2" selection-start-column="5" selection-end-line="2" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/books/book_test.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="456">
+              <caret line="29" column="7" selection-start-line="29" selection-start-column="7" selection-end-line="29" selection-end-column="7" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$USER_HOME$/go/pkg/mod/github.com/onsi/ginkgo@v1.12.0/ginkgo_dsl.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="304">
+              <caret line="308" selection-start-line="308" selection-end-line="308" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/go/pkg/mod/github.com/onsi/ginkgo@v1.12.0/internal/suite/suite.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="152">
+              <caret line="24" column="5" selection-start-line="24" selection-start-column="5" selection-end-line="24" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/books/books_suite_test.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="152">
+              <caret line="13" selection-start-line="13" selection-end-line="13" />
+              <folding>
+                <element signature="e#20#98#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="GOROOT" path="/usr/local/go" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="GoLibraries">
+    <option name="indexEntireGoPath" value="false" />
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="y" value="518" />
+    <option name="width" value="1920" />
+    <option name="height" value="1082" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="bdd_ginko" type="b2602c69:ProjectViewProjectNode" />
+              <item name="bdd_ginko" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="bdd_ginko" type="b2602c69:ProjectViewProjectNode" />
+              <item name="bdd_ginko" type="462c0819:PsiDirectoryNode" />
+              <item name="books" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="bdd_ginko" type="b2602c69:ProjectViewProjectNode" />
+              <item name="bdd_ginko" type="462c0819:PsiDirectoryNode" />
+              <item name="cart" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="bdd_ginko" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="go.gopath.indexing.explicitly.defined" value="true" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="go.sdk.automatically.set" value="true" />
+    <property name="last_opened_file_path" value="$USER_HOME$/go/src/github.com/nearmap/models" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="go.vgo" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1294964" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" />
+      <window_info anchor="bottom" id="Database Changes" order="8" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.20518358" />
+      <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VgoProject">
+    <integration-enabled>true</integration-enabled>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/design.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/books/book.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="38">
+          <caret line="2" column="5" selection-start-line="2" selection-start-column="5" selection-end-line="2" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/books/book_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="456">
+          <caret line="29" column="7" selection-start-line="29" selection-start-column="7" selection-end-line="29" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/go/pkg/mod/github.com/onsi/ginkgo@v1.12.0/internal/suite/suite.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="24" column="5" selection-start-line="24" selection-start-column="5" selection-end-line="24" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/books/books_suite_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="13" selection-start-line="13" selection-end-line="13" />
+          <folding>
+            <element signature="e#20#98#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/go/pkg/mod/github.com/onsi/ginkgo@v1.12.0/ginkgo_dsl.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="308" selection-start-line="308" selection-end-line="308" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

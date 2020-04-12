@@ -9,8 +9,7 @@
 
 ## 自己的例子
 
-
-
+魔兽英雄属性, 参考 http://fight.pcgames.com.cn/warcraft/dota/gl/1201/2434191_all.html
 
 ## 下一篇:进阶
 
