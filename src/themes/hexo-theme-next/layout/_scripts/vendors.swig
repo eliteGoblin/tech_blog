@@ -9,7 +9,7 @@
 {%- endif %}
 
 {%- if theme.pjax %}
-  {%- set js_vendors.pjax = 'pjax/pjax.min.js?v=0.2.8' %}
+  <script data-cfasync="false" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
 {%- endif %}
 
 {%- if theme.fancybox %}

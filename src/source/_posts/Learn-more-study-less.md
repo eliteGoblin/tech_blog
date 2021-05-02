@@ -42,6 +42,28 @@ description:
 
  信奉 "If you want to understand something well, try to explain it simply", 想象你要教会一个10岁的学生, 尽可能simple, plain, 并适当比喻.
 
+ ## What I should Do
+
+ 读书的目的是提升自己, 改善自己的习惯，思维方式. 
+ 
+我的想法/计划如下
+
+首先: 识别重点知识，仅对复杂，重要的知识运用书中技术
+ 
+ *  指读法
+ *  积极阅读+Flow-based笔记: 按书分section笔记, 联系观点，形成网. 笔记侧重当时理解，不必整洁漂亮. "一次学会"; 纸上笔记; 
+ *  简化，比喻(培养比喻欲望)，内在化(本书最强大技巧)
+ *  终极检验是费曼技巧: 简单语言描述，适当比喻; 更重点知识写博客.
+
+ 学习技巧之外:
+
+ *  重视精力管理: 喝足水，规律运动，睡眠充足,健康饮食，少食多餐
+ *  学习必须明确目标：纠正按学习时间度量习惯，改目标导向: Learn, not study; Always想着如何apply
+ *  改线性为Circular, 张弛, tense-recover cycle. 固定每天,每周休息时间
+ *  Weekly计划, 设定deadline
+
+一句话，将以上注意点融入到日常Routine, 培养有益习惯(微习惯).
+
  ## Further material
 
 [作者博客](https://www.scotthyoung.com/blog), 另外作者推荐了几本书:
