@@ -15,4 +15,6 @@
 ## Reference
 
 
-[MathJax basic tutorial and quick reference](https://math.meta.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference)
+[MathJax basic tutorial and quick reference](https://math.meta.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference)  
+
+[hexo中插入数学公式](http://stevenshi.me/2017/06/26/hexo-insert-formula/)

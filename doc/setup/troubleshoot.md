@@ -25,3 +25,12 @@ echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo s
 
 
 [在同时开启CloudFlare的Rocket Loader和PJAX后，页面异常](https://github.com/theme-next/hexo-theme-next/issues/1147)
+
+## blog.franksun.org 404, elitegoblin.github.io正常
+
+*  检查有无: `source/CNAME`
+*  有了上面文件，应该自动生成 `public/CNAME`
+
+## GET hostname 返回404
+
+检查public下index.htm有无生成; 本地检查source下有无文件
