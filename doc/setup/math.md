@@ -1,9 +1,6 @@
 
 
 
-
-
-
 ## Setup
 
 [next doc: Math Equations](https://github.com/theme-next/hexo-theme-next/blob/master/docs/MATH.md)

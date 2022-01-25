@@ -6,6 +6,8 @@
 *  hexo g // generate html file
 *  hexo d // push html to gitpage
 
+clean up
+
 #### 注意
 
 *  header 不要跳级，会让索引混乱
