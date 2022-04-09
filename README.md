@@ -6,7 +6,6 @@ Source of my technical blog
 
 Docker container 包含working environment: 将所有dependency fix, 防止某个package upgrade, environment broken.
 
-
 build docker
 ```s
 cd /home/frank.sun/git_repo/blog/docker
