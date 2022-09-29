@@ -1,0 +1,13 @@
+{
+  "code": 200,
+  "message": "",
+  "traceId": "business_wzfw_work-location_000001",
+  "data": {
+    "msisdn": "17321452140",
+    "zipCode": 21,
+    "provId": 831,
+    "cityCode": 83101,
+    "location": "31.14570,121.54082",
+    "occurTime": "2017-05-23T09:52:07.000Z"
+  }
+}

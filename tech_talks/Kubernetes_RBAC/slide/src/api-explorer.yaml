@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: "2019-09-18T02:09:31Z"
+  name: api-explorer
+  namespace: demo
+  resourceVersion: "6821105"
+  selfLink: /api/v1/namespaces/demo/serviceaccounts/api-explorer
+  uid: 5a5d24e2-d9b9-11e9-86b3-0a7abf100674
+secrets:
+- name: api-explorer-token-hq26v

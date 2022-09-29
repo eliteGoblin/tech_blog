@@ -1,0 +1,15 @@
+- name: coverageapp-container
+  image: 973383851042.dkr.ecr.ap-southeast-2.amazonaws.com/nearmap/coverage
+  resources:
+    requests:
+      cpu: 1.5
+      memory: 8Gi
+    limits:
+      cpu: REPLACED_BY_PATCH
+      memory: REPLACED_BY_PATCH
+  livenessProbe:
+    httpGet:
+      path: /alive
+      port: 2040
+    initialDelaySeconds: 240
+    periodSeconds: 3

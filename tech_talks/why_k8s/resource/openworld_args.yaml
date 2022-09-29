@@ -1,0 +1,8 @@
+args:
+  - "run"
+  - "--jwks-url=$(IDENTITY_URL)"
+  - "--debug=$(DEBUG)"
+  - "--env=$(ENV)"
+  - "--namespace=$(NAMESPACE)"
+  - "--cache-uri=redisdb1:6379,redisdb2:6379"
+  - "--areas-base-url=http://areas-svc"

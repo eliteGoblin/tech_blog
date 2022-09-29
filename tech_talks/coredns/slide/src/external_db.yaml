@@ -1,0 +1,21 @@
+{
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "photosdb",
+    "namespace": "auqa-api",
+    ...
+  },
+  "spec": {
+    "ports": [
+      {
+        "protocol": "TCP",
+        "port": 5432,
+        "targetPort": 5432
+      }
+    ],
+    "type": "ExternalName",
+    "sessionAffinity": "None",
+    "externalName": "xxxxxxxxxxxxxx.ap-southeast-2.rds.amazonaws.com"
+  }
+}

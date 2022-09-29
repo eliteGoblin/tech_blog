@@ -1,0 +1,755 @@
+# Why kubernetes
+
+a beginner's guide from Microservice's perspective  
+
+04 June 2021
+
+Frank Sun
+Golang Developer, API Team
+frank.sun@nearmap.com
+
+## About this session
+
+Goal:
+
+*  Explain why k8s is so useful in building Microservice
+// As discussed with Simon, we want to bring more people's intrest into using k8s if they havn't do it yet. 
+// How individual will benefit from using it, save us from a lot a tedious work, also system more resilient; as a result, Nearmap will also benefit from it, increased performance and less service disruption.
+// Not just for microservice, we use it as a concrete example, as a goal, should help understand it. Better than just talk abstractly its benefit
+// Adam asked what k8s do and why we need it, I mentioned pod shceduling, not quite convicing.
+*  Build simplified mental model of k8s to help beginners onboard
+// a couple of live demo contained
+// We are considering provide support while you learn and start to use k8s?
+
+//  A bit about myself, I like k8s a lot, comparing to previous Microservice without k8s
+
+// <img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20201023144634.png" alt="20201023144634" style="width:850px"/>
+
+// In these 3 job arcoss 3 phase
+// monilith -> microservice: understand why and how to build microservice with a collection of opensource tools
+// Microservice on K8s: realized that before so much of my time wasted not using k8s, 
+//   1. No need to build our own service discovery infra(etcd) and related code.
+//   2. Release be so much easier, no downtime, release anytime.
+
+## Kubernetes the name
+
+Kubernetes (“koo-burr-NET-eez”) is originated from a Greek word, κυβερνήτης, meaning “helmsman” or “pilot.” 
+
+<img src="https://miro.medium.com/max/1225/1*6NVMEmo0qDcQjpXcXI8dtg.png" alt="drawing" width="600"/>
+
+## Definitions of Kubernetes
+
+// First we might want to try from get What is k8s from its definition
+
+Wikipedia    
+
+> An open-source container-orchestration system for automating application deployment, scaling, and management.  It aims to provide a "platform for automating deployment, scaling, and operations of application containers across clusters of hosts"
+
+Kubernetes.io    
+
+> Kubernetes is a portable, extensible, open-source platform for managing containerized workloads and services, that facilitates both declarative configuration and automation. 
+
+My favorite definition: Kubernetes is the computing cluster's operating system.
+
+## Linux as OS
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20210515095956.png" alt="20210515095956" style="width:700px"/>  
+
+## Linux as OS
+
+Linux manage single machine resources: e.g 8 Cores, 32 GB memory
+
+Provide service in application level: 
+*  Process/thread management
+*  Memory management 
+*  Socket
+*  File service;
+
+Developer interface: POSIX API
+
+## Kubernetes as Cluster OS
+
+OS Software installed in cluster, manage resource belong to cluster:
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20210515100202.png" alt="20210515100202" style="width:800px"/>  
+
+Developer interface: API server
+
+## View cluster level resource
+
+K8s manage cluster resource: e.g 18 EC2s, total 144 Cores, 576GB memory
+
+```
+kubectl get nodes -v=9
+kubectl top nodes
+```
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20210515104114.png" alt="20210515104114" style="width:700px"/>  
+
+## K8s architecture
+
+At hardware level, 2 types of nodes:
+
+*  The master node, which hosts the Kubernetes Control Plane that controls and manages the whole Kubernetes system
+*  Worker nodes that run the actual applications you deploy
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20210515115511.png" alt="20210515115511" style="width:700px"/>
+
+## API team's kubernetes cluster
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20210515114318.png" alt="20210515114318" style="width:800px"/>
+
+// Productivity, Small group of people can manage large cluster
+
+## Features provided by Kubernetes
+
+K8s as OS provide useful API for building microservice system on cluster: 
+
+- **Workloads scheduling**
+- **Self-healing, replication control**
+- **Service discovery, Load balancing**
+- **Autoscaling**
+
+- Easy rollouts and rollbacks
+- Storage orchestration
+- Secret and configuration management
+
+## Kubernetes terminology
+
+We need to talk in K8s terminology: 
+
+- Node: a single computing instance(EC2)
+- Pod: basic deploy/running unit, like process in Linux
+- Replicate Set: group of identical pods(replicas)
+- Service: reverse proxy/load balancer to your workloads, like Nginx 
+
+// Pod (unbreakable unit when deploy and run), can think of equal contfainer
+// It provide useful functions when building micro-service
+
+// Human use API or kubectl to access apiserver; User access service via IP addr
+// ETCD: persist state data, create whole cluster with Phonebook of all services(imagine you lost all your contact, WFH and slack down)
+
+K8s makes building Microservice much easier
+
+## From Monilith to Microservice
+
+## Legacy system: Big Monilith
+
+Years ago, most software applications were big monoliths
+
+*  Running either as a big single process or as a small number of processes
+*  Components coupled with each other
+*  Slow release cycles, updated relatively infrequently
+
+## Breaking down Monilith
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20210516113621.png" alt="20210516113621" style="width:700px"/>
+
+## Microservice
+
+Legacy applications are slowly being broken down into smaller, independently running services, Microservice  
+
+Each microservice is a standalone process, with simple, well-defined APIs.
+
+*  Decouple components: Quality of architecture depend on quality of decoupling
+*  Single responsibility: Do one thing and do it well
+*  Make changes more quickly and frequently
+
+: Fast fish
+
+## Microservice of API team
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20210516105238.png" alt="20210516105238" style="width:700px"/>
+
+## Microservice of API team
+
+Several services are backend of others
+
+Accessed internal only: 
+*  Tilesprocess
+*  Transactions
+*  Sourcepixels
+*  Areas
+
+Accessed both externally and internally
+*  Coverage
+*  WMS
+
+[Microservice Dependency Graph](https://github.com/nearmap/api-team/blob/master/cicd/service_dependencies.png)  
+
+## What happened When User opening Mapbrowser
+
+```
+https://api.nearmap.com/coverage/v2/poly/xxx
+https://api.nearmap.com/coverage/v2/point/xxx
+https://api.nearmap.com/tiles/v3/Vert/18/241182/157301.img
+https://api.nearmap.com/projects/v1/refs/1e5991ce-b182-4390-a19f-4371589ff066
+https://api.nearmap.com/predictions/v1/raster/15/9646/12318.tif?classes=2,8&until=2020-09-25
+```
+
+## Benefits of Microservice 
+
+- Develop separately: big team break into smaller squads, develop in parallel, different repo
+- Deployment/Release separately
+- Scaling separately: Monolithic service has to scale everything together
+- Technology Heterogeneity: communication protocol language agnostic
+
+: Develop separately: don't need to know implementation detail of backend service, only need to know how to call it.
+: Conway's law: Any organization that designs a system (defined broadly) will produce a design whose structure is a copy of the organization's communication structure.
+
+## Challenges of Microservice
+
+: Mainly come from complexity caused by break Monilith into many pieces
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20210516115206.png" alt="20210516115206" style="width:700px"/>
+
+## Challenges of Microservice
+
+Much more complicated problems because increased number of services and inter dependencies
+
+- Deployment: Workload scheduling in cluster; not only number of deployments, even worse is inter-dependencies between the components
+- High availability: application crash, node fail
+- Service Discovery
+- Scaling separately
+- Release
+- Monitoring, Distributed tracing
+
+## Kubernetes is built on top of container technology
+
+## Benefit of Containerization
+
+- Self-contained
+- Isolating process with Linux namespace: mount, pid, network, user, etc
+- Lightweight
+- Build once, run anywhere
+- Resource constrained
+
+Container images bundle a program and its dersions of shared libraries on the system
+// Isolated process in Linux
+
+// Can just work in a total different environment
+
+// Think it's a light weighted VM, cgroup
+
+// everbright bank story: depend on same version of redis-cli, sql driver
+// Isolation: share house and studio, buckhead
+
+## Containerization solved Microservice's dependency problem
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20210516155939.png" alt="20210516155939" style="width:700px"/>
+
+More likely running into dependency problem since application developed separately.
+
+//  all of these programs share the same ve
+We should containerize everything if possible: pack everything of an application into a deploy-ready artefact
+
+## Docker's workflow
+
+*  Image
+*  Registry
+*  Container
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20210516160224.png" alt="20210516160224" style="width:700px"/>
+
+## Demo: build a docker image and push to registry
+
+.code resource/docker/v2/Dockerfile
+
+```
+docker build -t elitegoblin/why_k8s:v2 .
+docker run -p 8080:80 elitegoblin/why_k8s:v2
+```
+
+## Kubernetes workflow
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20210516182450.png" alt="20210516182450" style="width:700px"/>
+
+## Demo environment on GKE
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20210516195152.png" alt="20210516195152" style="width:700px"/>
+
+*  K8s Platform: Google Kubernetes Engine(GKE)
+*  Client Tools: gcloud, kubectl(binaries)
+
+: Show how quickly to create a brand new k8s cluster
+
+## Init demo environment
+
+Create k8s cluster in GKE:
+
+```
+gcloud init --skip-diagnostics
+gcloud config set compute/region australia-southeast1
+gcloud config set compute/zone australia-southeast1-a
+gcloud container clusters create k8s-talks --num-nodes=3 --enable-autoscaling --min-nodes=3 --max-nodes=3
+```
+
+Use kubectl to test if cluster up
+
+config file in `$HOME/.kube/config`
+```
+gcloud container clusters get-credentials k8s-talks
+kubectl config get-contexts
+kubectl get nodes -v 6
+```
+
+## Pod and Pod scheduling
+
+## What is Pod
+
+Pod: group of containers
+
+-  Basic building block in Kubernetes
+-  Co-located group of containers
+-  Partial isolation between containers within a Pod.(by default, share network and UTS namespace, not filesystem and PID)
+
+## Why named Pod?
+
+Pod: a social group of whales
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20201024122936.png" alt="20201024122936" style="width:250px"/>
+
+Docker container: Whale
+
+<img src="https://cdn.vox-cdn.com/thumbor/YiSPuNNVjUhKnYPpqzVinwYCRK8=/1400x1400/filters:format(png)/cdn.vox-cdn.com/uploads/chorus_asset/file/11422405/Docker_logo_011.png" alt="drawing" width="250"/>
+
+Pod = Group of whales = Group of docker container 
+
+## Schedule workloads in cluster
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20210516182450.png" alt="20210516182450" style="width:700px"/>
+
+## Schedule workloads in cluster
+
+Scenario: task to deploy the new Microservice to cloud.   
+Services and replicas: A(3), B(5), C(2), D(2)
+
+*  How many ec2 instance you need?
+*  How should you arrange the service in different ec2(nodes)?
+
+What's your Microservice finally looks like on cloud after deployment?
+
+## Solving a packing problem on cloud
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20210516200039.png" alt="20210516200039" style="width:600px"/>
+
+How you gonna put your stuff(service) in to box(computing instance)?
+
+## Example from API team
+
+// real resource request/limit
+*  Tile CPU 2.5/3.5 13G/14G, 3 replicas
+*  Coverage 1.5/6.5 8G/20G, 2 replicas
+*  Area 100m/100Mi; 250m/250Mi, 4 replicas
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20201031144322.png" alt="20201031144322" style="width:500px"/>
+
+## Do it manually (Consider Memory only)
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20201031145507.png" alt="20201031145507" style="width:600px"/>
+
+*  Randomly pick one node that meet resource requirement
+*  Better to avoid deploying same service instance on different nodes.
+
+## Manually scheduling wont work in Microservice
+
+*  Large number of services, replicas
+*  Hard to keep track of deployment state: nodes has different workloads
+*  Very difficult to cope with changing load
+*  Hard to handle node failure
+
+: So in practice, a lot of company just put all service in a single EC2, and scale them together.
+
+## K8s Resource plan, Schedule Demo
+
+// k8s 自动部署, pod by pod, 先别考虑replica, replica放在resilience中. 
+
+deploy 3 pods
+```
+kubectl run --restart=Never --image=gcr.io/kuar-demo/kuard-amd64:green
+```
+
+```
+kubectl proxy
+docker run -it --net=host hjacobs/kube-ops-view
+```
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20201031145645.png" alt="20201031145645" style="width:500px"/>
+
+## Running a single application workflow
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20210516201614.png" alt="20210516201614" style="width:800px"/>
+
+// Possible question: what if Pod not specify limit and How k8s handle Resource go over limit
+// Let’s imagine a scenario where we have a machine that is running out of memory. What will Kubernetes do?
+
+//  If your Pod’s containers have no requests, then by default they are using more than they requested, so these are prime candidates for termination
+// Other prime candidates are containers that have gone over their request but are still under their limit.
+// If Kubernetes finds multiple pods that have gone over their requests, it will then rank these by the Pod’s priority, and terminate the lowest priority pods first.
+
+// https://cloud.google.com/blog/products/gcp/kubernetes-best-practices-resource-requests-and-limits
+
+## Deploy Nearmap's legacy API 
+
+: everything into a single EC2 AMI, scale them together
+
+## High Availability and Replication
+
+: In last section, Pods are essentially singletons
+// New challenges: pod crashing, node down; 
+We want to avoid: down time.
+
+[Nearmap status](https://status.nearmap.com/)
+
+*  What if application crashed?
+*  What if node(s) fail?
+
+How to avoid Single point of failure(SPOF)?
+
+Need several identical pods working together: replicas
+
+// For example, we want it always be 3 nodes running
+ReplicaSet: create a group of exactly same pods
+
+## ReplicaSet
+
+.code resource/rs.yaml
+
+## Demo
+
+```
+kubectl get pods
+kubectl delete pod kuard-lfwjq
+kctl delete pods -l app=kuard
+kubectl scale --replicas=5 rs/kuard
+```
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20201031145645.png" alt="20201031145645" style="width:500px"/>
+
+// Controller loop: non-terminating loop that regulates the state of a system
+// Object have a spec field that represents the desired state
+
+: teardown 1 node, see what happens, ssh/browser into GCP node and restart/teardown
+
+## RelicaSet of API team
+
+`k get rs | grep -v "0         0         0" | grep -v "argo" | grep app`
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20210516202230.png" alt="20210516202230" style="width:700px"/>
+
+## Keeping pods healthy
+
+If the container’s main process crashes, Kubernetes restart it  
+
+What if app stop working but not crash, e.g infinite loop, deadlock;   
+
+How can we signal Kubernetes to restart those unhealthy pods?
+
+## Pod Liveness Probe 
+
+Kubernetes supports three probing mechanisms:
+
+*  HTTP GET
+*  TCP socket
+*  Exec command inside container, check exit code
+
+.code resource/live_probe_pod.yaml
+
+## Coverage's liveness probe example
+
+.code resource/coverage_liveness.yaml
+
+*  initialDelaySeconds
+*  periodSeconds
+
+## RelicaSet review
+
+*  Replication: Multiple running instances mean more failure can be tolerated.
+*  Scale: Multiple running instances mean that more requests can be handled.
+*  Healthy check of pods, auto kill malfunction ones.
+
+## Pod's IP address
+
+`kubectl get pods kubia -o json | jq '.status.podIPs | first.ip' -r`
+
+*  Each pod gets its own unique IP address
+*  Pods communicate with each other in a flat, NATless network
+*  Pods IP range different with hostIP
+
+## Pod's IP address
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20210517155654.png" alt="20210517155654" style="width:700px"/>
+
+## The Pods Service Discovery Problem
+
+*  Pods are ephemeral: ReplicaSet been scaled up/down, nodes has failed, pods rescheduled.
+*  Client don't know Pods IP up front: Kubernetes assigns Pod IP dynamically(before it's started)
+*  Multiple pods may provide the same service: should decouple IP of workloads and service entrypoint.
+
+## The Pods Service Discovery Problem
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20201031151053.png" alt="20201031151053" style="width:550px"/>
+
+How we hit those moving targets?
+
+[Using Source IP](https://kubernetes.io/docs/tutorials/services/source-ip/)
+// Service discovery is the process of automatically detecting devices and services on a network
+
+// When break down your monolithic application to several focused microservices, what's the efficient way to locate your services?
+
+// Underlying problem: retrieve any one from a group.
+
+## Solution: Kubernetes Service 
+
+Service: a way of group different pods, each has a unique name(and a Virtual IP address)
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20210517135814.png" alt="20210517135814" style="width:700px"/>
+
+## K8s Service
+
+.code resource/service.yaml
+
+## K8s Service Demo
+
+// Essential problem: pick anyone from a group
+
+// 1. Each pod will have a label
+// 2. Use label selector to specify the group of pods you wanted
+
+```
+kubectl create namespace k8s-talks
+kubectl config set-context --current --namespace=k8s-talks
+kubectl run --restart=Never -l app=k8s-talks --image=gcr.io/kuar-demo/kuard-amd64:green k8s-talks-1
+kubectl run --restart=Never -l app=k8s-talks --image=gcr.io/kuar-demo/kuard-amd64:green k8s-talks-2
+// kubectl delete all --all -n k8s-talks
+```
+
+```
+kubectl apply -f resource/service.yaml
+kubectl get svc
+```
+
+Verify if we can randomly get pods `belong` to service(i.e: group)
+
+// 用curl 验证, 因为browser keep alive, 服用同一个connection, 不会随机选pod
+// 观察curl得到的 hostname, 为pod name.
+```
+curl http://34.87.250.164/
+```
+
+## Access k8s service by name
+
+Access by ClusterIP, or, even better: by DNS name
+
+```
+NAME        TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)        AGE
+k8s-talks   LoadBalancer   x.x.x.x       x.x.x.x        80:30957/TCP   12m
+```
+
+Go to pod demo page: 
+
+DNS query: A record, name: k8s-talks
+Get a stable IP: 
+
+```
+;; ANSWER SECTION:
+k8s-talks.k8s-talks.svc.cluster.local.	28	IN	A	10.3.252.70
+```
+
+Kubernetes host an internal DNS server for service names.
+
+## We use Kubernetes Service in our Microservice
+
+areas-svc definition:  
+
+.code resource/areas-svc.yaml /START OMIT/,/END OMIT/
+
+Used in Openworld:
+
+.code resource/openworld_args.yaml
+
+## Signaling when a pod is ready? 
+
+## Scaling in K8s
+
+// another interesting topic, distinguish between toy env and real env, vital to prod env
+// So easy with k8s, config and forget it
+
+What we've got now: 
+
+With RelicaSet, we can manually scale
+
+```
+kubectl scale rs-name --replicas=10 
+```
+
+Not ideal, what we really want:   
+
+Scale based on work load.
+
+// Manually scale is what we did in early age, predict a spike, then allocate instance up front.
+2 types of Pods scaling:
+
+*  Horizontal: more Pods
+*  Vertical: give single pod more CPU and/memory, e.g database
+
+## Understanding the autoscaling process
+
+Autoscaling based on metrics: CPU, memory, custom metrics(e.g QPS).  
+
+Aiming to satisfy target value, e.g 60% of CPU usage. 
+
+*  Obtain metrics of pods
+*  Calculate the number of pods required to satisfy target value
+*  Update the replicas field of the scaled resource
+
+## Horizontal pod autoscaling demo
+
+// Use kube ops view to demo
+// Visually see pod scaling before explaining
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20201022135935.png" alt="20201022135935" style="width:800px"/>
+
+## Horizontal pod autoscaling by CPU
+
+Automatic scaling of the number of pod replicas based on some metric: CPU, memory, custom metrics.
+
+// 3 worker(replica), work increase(request), more worker(pod)
+
+Controlled by the HorizontalPodAutoscaler (HPA) resource:
+
+*  HPA defined expected average CPU usage of pods belong to target resource: ReplicaSet, Deployment
+*  Periodically checks pods metric: CPU usage
+*  Calculate pods count: podsCount = SumOfCPU / target CPU
+*  Change replica count to make pods count close to target value
+
+// also makes sure the Autoscaler doesn’t thrash around when the metric value is unstable and changes rapidly.
+: The Autoscaler compares the pod’s actual CPU consumption and its CPU requests
+
+## HPA object
+
+.code resource/hpa_areas.yaml
+
+Value could be CPU core number: 
+
+e.g expected 50%
+
+*  Current 100%, resizeRatio = 100 / 50 = 2
+*  Current 10%, resizeRatio = 10 / 50 = 0.2
+
+## HPA calculate new pods count
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20201022092951.png" alt="20201022092951" style="width:1000px"/>
+
+## Big picture
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20201022094006.png" alt="20201022094006" style="width:1000px"/>
+
+// feedback loop: pod CPU metric -> HPA -> action to make it close to expected metric
+
+## Demo: horizontally autoscaling
+
+// before or after explanation
+// We had a deployment object(default 3 replica running):
+// .code resource/svc-deployment-v1.yaml /START OMIT/,/END OMIT/
+
+```
+kubectl apply -f resource/svc-deployment-v1.yaml
+```
+
+```
+kubectl autoscale -f resource/hpa_talks.yaml
+```
+
+Start load test:
+
+```
+wrk -t 5 -c5 -d3000s -H 'Host: example.com' -R 200 --timeout 2s http://35.189.39.71/
+```
+
+View result
+```
+watch -n 5 kubectl get hpa,deployment
+kubectl describe hpa
+```
+
+// take 6 minutes to down scale 
+
+What about your nodes are full because of HPA? 
+
+Kubernetes can automatically spinup new worker nodes if out of capacity
+
+// cmd should enable before? after create cluster? can enable when creating it?
+// show error message when node are full?
+
+## Cluster Autoscaler
+
+// Based on node's metric, HPA based on Pod's metric(if a Pod gets too busy, spinup more pods).
+// K8s support it, but also depend on cloud or on premise
+
+*  Automatically request additional nodes from the cloud provider
+*  Scales up when it finds a pod that can’t be scheduled to existing nodes
+*  De-provisions nodes when they’re underutilized for longer periods of time
+
+Add-on of K8s:
+
+In our kepler k8s cluster:
+```
+kubectl get pods -n kube-system | grep -i cluster-autoscale
+```
+
+we got: 
+
+```
+cluster-autoscaler-66d767794b-xzkk8
+```
+
+// downscale take more time, happens after HPA to scale down first.
+// just leave it there see if can happen before our session ends.
+
+Enable cluster auto scaler in GKE
+```
+gcloud container clusters update k8s-talks --enable-autoscaling --min-nodes=3 --max-nodes=5
+```
+
+## Cluster Autoscaler
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20201022143214.png" alt="20201022143214" style="width:1000px"/>
+
+// Just give the demo: k8s can do it. config more on cloud provider's side
+
+## Demo
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20201022142041.png" alt="20201022142041" style="width:1000px"/>
+
+// view node resource
+// kubectl top nodes
+// kubectl describe nodes
+
+## Candidates list
+
+*  K8s internals: etcd, scheduler, kubelet, kubeproxy, Controller manager, chain of events of controllers
+*  HA of cluster
+*  Resource request and limitation
+*  Spot instance to reduce cost
+*  Docker network and CNI
+*  Secure with RBAC and kube2IAM
+*  Advanced scheduling: taint, toleration, affinity
+*  Istio
+
+## What's next?
+
+##  Learn Kubernetes Basics(Official Interactive Tutorial)
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20201031152739.png" alt="20201031152739" style="width:800px"/>
+
+https://kubernetes.io/docs/tutorials/kubernetes-basics/
+
+## K8s up and running, 2rd
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20201031152920.png" alt="20201031152920" style="width:350px"/>
+
+## K8s in action
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20201031153045.png" alt="20201031153045" style="width:350px"/>
+
+Best K8s book(2rd is coming)

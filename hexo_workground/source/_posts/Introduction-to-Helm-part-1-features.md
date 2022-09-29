@@ -153,10 +153,84 @@ Helm可以add, remove repo, 也可以generate index.
 
 Lint: `helm lint --strict . --debug`
 
-可定义 `values.schema.json` 规定value的structure
+可定义 `values.schema.json` 规定value的structure, 采用[JSON Schema](https://json-schema.org/)  
 
 如: 
 ```
 values.yaml         # The default configuration values for this chart
 values.schema.json  # OPTIONAL: A JSON Schema for imposing a structure on the values.yaml file
 ```
+
+常见的检查: 
+
+Requirement checks. 
+Example: root下设置`required`:
+
+```json
+"required": [
+  "replicaCount",
+  ...
+]
+```
+
+不设置`replicaCount`值会报错: `[ERROR] values.yaml: - (root): replicaCount is required`
+
+
+Type validation. Example: 修改`replicaCount` type为string, 会fail: `replicaCount: Invalid type. Expected: string, given: integer`
+
+```json
+"replicaCount": {
+    "$id": "#/properties/replicaCount",
+    "type": "string",
+    "title": "The replicaCount schema",
+    "default": 0,
+},
+```
+
+Range validation: 一般用`minimum`和`maximum`: Example:
+
+```json
+"replicaCount": {
+    "$id": "#/properties/replicaCount",
+    "type": "integer",
+    "title": "The replicaCount schema",
+    "description": "An explanation about the purpose of this instance.",
+    "minimum": 3,
+    "maximum": 5,
+    "default": 3,
+},
+```
+
+设置为`1` lint报错: `replicaCount: Must be greater than or equal to 3`
+
+Constraint Validation, 用regex检查: 
+
+```json
+"pullPolicy": {
+    "$id": "#/properties/image/properties/pullPolicy",
+    "type": "string",
+    "title": "The pullPolicy schema",
+    "pattern": "^(Always|Never|IfNotPresent)$"
+},
+```
+
+值不满足报错: `image.pullPolicy: Does not match pattern '^(Always|Never|IfNotPresent)$'`
+
+添加JSON schema的步骤: 
+
+1.  Convert your values YAML file to JSON on https://www.json2yaml.com/
+1.  Paste the JSON on https://www.jsonschema.net/ and click on "Infer Schema"
+1.  Paste the schema into the values.schema.json file, tune it.
+
+# Misc features
+
+*  [Hook](https://helm.sh/docs/topics/charts_hooks/): which hook into events in the release process and take action
+  +  pre-install
+  +  post-install
+  ...
+*  Run Helm test: Test is a job definition that specifies a container with a given command to run. 0 success 1 fail.
+
+
+# Reference
+
+[Validating Helm Chart Values with JSON Schemas](https://www.arthurkoziel.com/validate-helm-chart-values-with-json-schemas/)

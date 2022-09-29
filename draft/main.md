@@ -1,3 +1,9 @@
+
+# KMS
+
+
+
+
 ## delve 调试
 
 *  远程调试
@@ -10,7 +16,7 @@
 
 ## How to do load testing
 
-
+k6s
 
 
 ## Golang containers
@@ -23,14 +29,6 @@
 *  set
 
 [dropbox/godropbox](https://github.com/dropbox/godropbox/blob/master/container/set/set.go)
-
-
-## Golang Heap
-
-
-
-[Package heap](https://golang.org/pkg/container/heap/#Init)
-[Golang: 详解container/heap](https://ieevee.com/tech/2018/01/29/go-heap.html)
 
 
 ### HTTPS
@@ -47,10 +45,6 @@
 *  Tonybai: 
 *  HTTPS: C语言HTTPS Client分析
 *  load certificate, 或者不安全access
-
-### Linux File Times
-
-APUE 4.19 
 
 
 ### command flag parsing
@@ -105,35 +99,7 @@ APUE 4.19
 
 第二篇:  gRPC 原理， 类型， 深入例子
 
-### SEO
-
-如何做SEO
-目标：
-*  搜索elitegoblin blog，出现在 google baidu首页
-*  搜索特定文章题目，出现在 google/baidu首页
-Bonus: 
-*  搜索关键词，出现在前三页
-
-### K8s Install on VMs
-
-*  组件，大致结构，进程，干嘛用的
-
-
-### HTTP Middleware
-
-*  how udesk do basic auth
-*  Middleware/nsq ? maybe not
-
-
-### bloom filter cache
-
-
-#### 闭包
-
-*  c++
-*  golang
-*  javascript
-*  lua
+# local k8s KIND
 
 
 

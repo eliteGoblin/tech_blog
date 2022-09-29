@@ -1,0 +1,342 @@
+Go Project Layout
+27 Mar 2019
+
+Frank Sun
+Golang Developer
+elitegoblinrb@gmail.com
+http://elitegoblin.github.io
+
+* Roadmap
+
+- Pain points 
+- Golang "Standard" Layout
+- SOLID principle
+- Clean Architecture
+- Case Study
+- My Proposal
+- Appendix A: Testing Strategy
+- Appendix B: Package Naming
+
+* Pain points
+
+- Hard to change, decisions taken too early
+- Centered around frameworks/database, business logic is spread everywhere
+- Hard to find things
+- Test: slow, heavy; low test coverage, hard to mock; 
+- Circular dependency
+
+* Goal of good project layout
+
+Root cause: tightly coupling/wrong dependency
+
+Source code repo structure/layout is representation of architecture
+
+Clean architecture leads to a clean layout
+
+What's a good architecture of project to help decoupling? 
+
+* Golang Standard Layout
+
+.link https://github.com/golang-standards/project-layout golang-standards/project-layout
+
+- Set of common historical and emerging project layout patterns in the Go ecosystem
+- Lean from famous open source projects
+- 6350+ stars
+
+Sources
+
+- https://github.com/moby/moby
+- https://github.com/prometheus/prometheus
+- https://github.com/kubernetes/kubernetes
+- https://github.com/istio/istio
+- https://github.com/cockroachdb/cockroach/
+
+* Golang Standard layout
+
+.image images/standard_layout.png 600 _
+
+* Golang Standard layout
+
+/cmd directory
+
+- Match binary name
+- Should not contain too much code (pkg/internal)
+
+* Golang Standard layout
+
+/internal directory (go 1.4)
+
+- Hides your package, used to make packages unimportable
+- Private application and library code
+
+* Golang Standard layout
+
+/pkg directory
+
+- Library code that's ok to use by external applications
+- Other projects will import these libraries, think twice before putting code here
+
+.link https://github.com/prometheus/prometheus/tree/master/pkg prometheus/prometheus/pkg
+
+* Golang Standard layout
+
+/api directory
+
+- OpenAPI/Swagger specs, JSON schema files, protocol definition files
+
+.link https://github.com/openshift/origin/tree/master/api OpenShift API
+
+* Golang Standard layout
+
+/configs
+
+- Configuration file templates or default configs
+- Consul-template
+- systemd service file or separate /init folder
+
+* Golang Standard layout
+
+/build directory
+
+- build/package: cloud (AMI), container (Docker), OS (deb, rpm, pkg) package configurations and scripts
+- build/ci: Put your CI (travis, circle, drone) configurations and scripts
+
+* Golang Standard layout: miscellaneous
+
+- /deployments:  system and container orchestration deployment configurations
+- /tools
+- /scripts
+- /docs: addition to godoc generated documentation
+- /assets: logo, static
+
+* Golang Standard layout
+
+- Practical, basic layout
+- Help to read Golang opensource project
+- NOT an official standard defined by the core Go dev team
+- Not screaming about the business logic
+- No consistent standard of folder layout, just practical: resuable, build, entry
+
+* How we structure/architect the internal/pkg package?
+
+* SOLID principle
+
+Five design principles intended to make software designs more understandable, flexible and maintainable (subset of many principles promoted by Uncle Bob)
+
+- Single responsibility principle
+- Open–closed principle
+- Liskov substitution principle
+- Interface segregation principle: specific interface, not general interface
+- Dependency inversion principle
+
+* Liskov substitution principle
+
+- Objects in a program should be replaceable with instances of their subtypes without altering the correctness of that program
+- Design by contract: define formal, precise and verifiable interface specifications for software components
+
+* Dependency inversion principle
+
+.image images/dip.png _ 850
+
+* Dependency inversion principle
+
+- Dependency flow has to be same as control flow
+- High-level/Abstract module depend on low-level details
+
+* Dependency inversion principle
+
+.image images/dip2.png
+
+* Dependency inversion principle
+
+- Source code dependency points in the opposite direction compared to the flow
+of control 
+
+- Any source code dependency, no matter where it is, can be inverted 
+
+* Dependency inversion principle
+
+- High-level modules should not depend on low-level modules. Both should depend on abstractions (interfaces)
+- Abstractions should not depend on details. Details (classes) should depend on abstractions
+
+Is there any architecure/layout help us achieve this?
+
+* Clean Architecture (Also by Uncle Bob)
+
+.image images/CleanArchitecture.jpg 
+
+* Clean Architecture Example
+
+.image images/clean_arch_structure.png _ 500
+
+* Why layered: Unix architecture
+
+.image images/unix_arch.png _ 850
+
+* Standing on the shoulders of giants
+
+Hexagonal, Onion, DCI, BCE Architecture
+
+- Independent of Frameworks
+- Testable: The business rules can be tested without the UI, Database...
+- Independent of UI
+- Independent of Database
+- Independent of any external agency: business rules simply don’t know anything about the outside world
+
+.link https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html The Clean Architecture Blog
+
+* Clean Architecture: The Dependency Rule
+
+- Use case centric/driven design
+- Concentric circles represent different areas of software
+- Further in you go, the higher level the software becomes: mechanisms vs policies
+- Source code dependencies can *ONLY point inwards*
+
+* Clean Architecture: The Dependency Rule
+
+- Name declared in an outer circle must not be mentioned by the code in the an inner circle: functions, classes. variables...
+- Data formats used in an outer circle should not be used by an inner circle: formats are generate by a framework in an outer circle
+- Anti-pattern: pass variables of DB row
+
+* Clean Architecture
+
+.image images/CleanArchitecture.jpg 
+
+* Clean Architecture: Entities
+
+- Encapsulate the most general and high-level rules
+- Least likely to change when something external changes: not expect to be changed by: page navigation, security, operational change
+- Can be an object with methods, or it can be a set of data structures and functions
+- Could be used by many different applications in the enterprise
+
+
+* Clean Architecture: Use Cases
+
+- Encapsulates and implements all of the use cases of the system
+- Use case is: a list of actions or event steps typically defining the interactions between a role (actor in UML) and a system to achieve a goal
+- Orchestrate the flow of data to and from the entities
+- We do not expect changes in this layer to affect the entities
+- Changes to the operation of the application will affect the use-cases
+- Use cases drive the design, they are centre of architecture
+
+* Clean Architecture: Use Cases
+
+.image images/ub.png _ 700
+
+* Use Cases Example
+
+.image images/use_case1.png _ 700
+
+* Use Cases Example
+
+.image images/use_case2.png _ 700
+
+* Use Cases: further reading
+
+.link http://www.plainionist.net/Implementing-Clean-Architecture-UseCases/ Implementing Clean Architecture - What is a use case?
+
+* Clean Architecture: Interface Adapters
+
+- A set of adapters that convert data between entity/use cases and external agency
+- if use MVC, implement here: models: data structure from controllers to use cases; or back from use cases to views
+- If use db, no code inward of this circle should know anything about the database, SQL belong here
+
+* Clean Architecture: Frameworks and Drivers
+
+- Details
+- Frameworks and tools such as the Database, the Web Framework
+- Generally not much code here 
+
+* How to put it together: dependency injection
+
+.play -edit src/injection.go 
+
+.link https://medium.com/full-stack-tips/dependency-injection-in-go-99b09e2cc480 Dependency Injection In Go
+
+* Simple Case Study
+
+.link https://medium.com/full-stack-tips/dependency-injection-in-go-99b09e2cc480 Dependency Injection In Go
+
+.image images/use_cases_overview.png _ 650
+
+
+* Simple Case Study: Entity
+
+.play -edit src/entity.go
+
+* Simple Case Study: Use Case
+
+.play -edit src/use_case.go
+
+Looks like we need some infrastructure module to store our user?
+
+* Simple Case Study: Use Case
+
+.play -edit src/use_case2.go
+
+* Simple Case Study: Infra
+
+.play -edit src/infra.go
+
+* Simple Case Study: Dependency Injection
+
+.play -edit src/injection.go 
+
+* Simple Case Study: Overview
+
+.image images/sample_arch.png
+
+* Clean Architecture: FAQ
+
+- Not nessasarily 4 layers
+- The Dependency Rule always applies: always point inwards
+- Typically the data that crosses the boundaries is simple data structures: no entities or database row
+
+* Clean Architecture Review
+
+.image images/review.png _ 750
+
+* More Case Study
+
+.link https://github.com/bxcodec/go-clean-arch go-clean-arch
+.link https://hackernoon.com/golang-clean-archithecture-efd6d7c43047 Trying Clean Architecture on Golang
+.link https://github.com/err0r500/go-realworld-clean go-realworld-clean
+
+* My Proposal
+
+- Layer approach if our logic is complicated enough/details changes frequently
+- Combine with "standard" layout
+- Test coverage: 70-75%+ ?
+
+* Reference and More materials
+
+.link https://vimeo.com/43612849 Uncle Bob: Clean Arch speech
+.link ttps://www.youtube.com/watch?v=Nsjsiz2A9mg Uncle Bob's Another Clean Arch speech
+.link https://github.com/mattia-battiston/clean-architecture-example#why-clean-architecture java example: mattia-battiston/clean-architecture-example
+.link https://www.slideshare.net/mattiabattiston/real-life-clean-architecture-61242830 Slide of realworld Java clean arch
+.link https://medium.com/@stephanhoekstra/clean-architecture-in-net-8eed6c224c50 .Net Clean Architecture
+.link http://www.plainionist.net/Implementing-Clean-Architecture-UseCases The "Implementing Clean Architecture" series
+.link https://blog.cleancoder.com/uncle-bob/2011/09/30/Screaming-Architecture.html Screaming Architecture
+.link https://herbertograca.com/2017/08/24/ebi-architecture/ EBI Architecture
+
+
+* Special Thanks
+
+Thanks David and Gobin for recommending the layouts
+
+* Appendix A: Testing Strategy
+
+.image images/testing_pyrmid.png
+
+.link https://www.slideshare.net/mattiabattiston/real-life-clean-architecture-61242830 Real Life Clean Architecture, page 40
+
+* Appendix B: Package Naming
+
+- Use simple names, Like: http, zip, and time
+- Do not use double or more words in names: net_http, do it like: net/http
+- Let the package path speaks for what the package does, like net/http and security/http
+- Don’t repeat the package names: miner.MinerInfo --> miner.Info
+- Use common abbreviations familiar to the programmers
+- Avoid generic package names: not like common, utils, helper etc.
+
+.link https://blog.learngoprogramming.com/code-organization-tips-with-packages-d30de0d11f46 Organize your code with Go packages — Master Tricks

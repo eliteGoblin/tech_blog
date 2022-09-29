@@ -1,0 +1,32 @@
+# START OMIT
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-talks
+spec:
+  selector:
+    matchLabels:
+      app: k8s-talks
+  replicas: 2
+  template:
+    metadata:
+      name: k8s-talks
+      labels:
+        app: k8s-talks
+    spec:
+      containers:
+      - image: elitegoblin/why_k8s:v2
+        name: golang-http
+# END OMIT
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-talks
+spec:
+  type: LoadBalancer
+  selector:
+    app: k8s-talks
+  ports:
+  - port: 80
+    targetPort: 80

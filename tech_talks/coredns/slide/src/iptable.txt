@@ -1,0 +1,15 @@
+
+-A KUBE-SERVICES -d 100.65.134.86/32 -p tcp -m comment --comment "auqa-api
+tiles-svc: cluster IP" -m tcp --dport 80 -j KUBE-SVC-QJ4JQJI3WLFZPILW
+
+-A KUBE-SVC-QJ4JQJI3WLFZPILW -m comment --comment "auqa-api/tiles-svc:" -m 
+statistic --mode random --probability 0.50000000000 -j KUBE-SEP-W6X5ESEZBLXKWCL7
+-A KUBE-SVC-QJ4JQJI3WLFZPILW -m comment --comment "auqa-api/tiles-svc:" -j 
+KUBE-SEP-LMVMRQMXQQ6B5NND
+
+-A KUBE-SEP-LMVMRQMXQQ6B5NND -s 100.105.162.7/32 -m comment --comment "auqa-api/tiles-svc:" -j KUBE-MARK-MASQ
+-A KUBE-SEP-LMVMRQMXQQ6B5NND -p tcp -m comment --comment "auqa-api/tiles-svc:" 
+  -m tcp -j DNAT --to-destination 100.105.162.7:2020
+-A KUBE-SEP-W6X5ESEZBLXKWCL7 -s 100.101.20.62/32 -m comment --comment "auqa-api/tiles-svc:" -j KUBE-MARK-MASQ
+-A KUBE-SEP-W6X5ESEZBLXKWCL7 -p tcp -m comment --comment "auqa-api/tiles-svc:" 
+  -m tcp -j DNAT --to-destination 100.101.20.62:2020

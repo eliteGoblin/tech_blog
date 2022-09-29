@@ -1,0 +1,266 @@
+Introduction to K8s RBAC
+24 Sep 2019
+
+Frank Sun
+Golang Developer
+elitegoblinrb@gmail.com
+http://elitegoblin.github.io
+
+* Main Goal
+
+- Understand big picture of authentication and authorization in K8s and RBAC's role in it
+- Understand related concepts: service account, role/clusterrole, rolebinding/clusterrolebinding
+- Ultimate goal: know how to limit a pod to specific permissions
+
+* Roadmap
+
+- K8s internal: API server
+- Big picture of authentication and authorization
+- Authentication with service account
+- Authorization with RBAC
+- Case study: assign admin access to dashboard
+- Demystify pod make request using service account
+- Conclusion
+
+* What's RBAC
+
+- RBAC is short for Role-Based Access Control
+- One of authorization choice K8s provided
+- Aim to give different roles specific permissions
+- GA since v1.8
+
+* Why RBAC?
+
+Current cluster's pods can do "everything" inside cluster, eg:  
+
+A malicious pod can delete other service/deployment/replicateset/pods if want to.
+
+We should only give them just enough priviledges needed(least priviledge)
+
+And avoid annoying access errors: 
+
+.image images/dashboard-auth-error.png _ 600
+
+
+* Big picture of authentication and authorization
+
+* API Server
+
+- Most concepts in K8s: service, deployment, pods, jobs, etc, have a corresponding object
+- API Server provided a RESTful, CRUD API for objects, objects stored in etcd
+- Running on master node, serve on port 443 (default serve insecure HTTP on 8080)
+
+.image images/apiserver.png 200 1000 
+
+* API Server: parameters
+
+- --authorization-mode=RBAC
+- --insecure-port=8080
+- --secure-port=443
+- --basic-auth-file=/srv/kubernetes/basic_auth.csv
+- --client-ca-file=/srv/kubernetes/ca.crt # X509 Client Certs
+- --tls-cert-file=/srv/kubernetes/server.cert
+- --tls-private-key-file=/srv/kubernetes/server.key
+- --token-auth-file=/srv/kubernetes/known_tokens.csv  # Static Token File
+
+* API Server
+
+Serves for both internal and outside cluster use API, eg kubectl, kubelet
+
+- kubectl get pods
+- Make request directly
+
+.image images/apiserver_browser.png _ 600
+
+When talking about authentication and authorization, we means manage access of incoming requests of API Server: approve or deny
+
+* K8s API access management
+
+.image images/big_picture.png _ 800
+
+* Authentication
+
+Identify who make the request
+
+- Once TLS is established, moves to the Authentication step
+- Can configure multiple authentication modules as chain(basic auth, jwt token, etc), any succeeded short-circuit it
+- Input: HTTP request header(or client certificate); Output: user/serviceaccount/group name
+- If request cannot be authenticated, return HTTP 401
+
+* Service Account
+
+- User is for human, service account is for service
+- Managed by K8s as service account object
+- Each pod can have only one sa
+- No sa specified will use default sa in its namespace
+
+We just focus on service account here
+
+* Service Account
+
+create service account
+
+  kubectl create serviceaccount api-explorer -n demo
+
+get service account detail:
+
+  kctl get sa/api-explorer -o yaml -n demo
+
+.code src/api-explorer.yaml
+
+* Authorization
+
+- Determine Whether a Request is Allowed or Denied, if denied, return HTTP 403
+- In another word: if {requester} can do {verbs} on {resources} 
+- Can configure multiple authorization modules as chain(RBAC, ABAC, Node, AlwaysAllow), checked in order
+- Input: user/service account/group; verbs; resoures;
+- Output: approve or deny
+
+.image images/rbac.png 280 _
+
+* Roles/Clusterroles to define resources and verbs
+
+Roles is namespace scope, clusterrole is cluster wide
+
+example cluster role: 
+
+.code src/cluster_role.yaml
+
+* K8s resources category
+
+- Namespaced resource: pods, deployments, jobs, etc
+- Non-Namespaced resources: CRD
+- Non-resource URL: health checks: "/healthz", "/healthz/etcd"
+
+* Verbs
+
+The verbs correspond roughly to HTTP methods
+
+.image images/verbs.png
+
+How we find out the verbs and api-group of resources?
+
+* List api resources
+
+  kubectl api-resources -o wide
+
+.image images/api-resources.png _ 1000
+
+* Rolebinding: bind privileges to service account
+
+sample rolebinding object:
+
+.code src/role_binding.yaml
+
+ClusterRoleBinding combined with ClusterRole have cluster wide priviledges
+
+* Test with can-i utility
+
+  kubectl auth can-i list pods --namespace demo --as system:serviceaccount:demo:api-explorer
+  kubectl auth can-i create pods --namespace demo --as system:serviceaccount:demo:api-explorer
+
+.image ./images/auth_cani.png
+
+Specify serviceaccount in format:  
+
+system:serviceaccount:<namespace>:<serviceaccountname>
+
+For update existing RBAC object, pls refer to:   
+
+.link https://kubernetes.io/docs/reference/access-authn-authz/rbac/#kubectl-auth-reconcile kubectl auth reconcile 
+
+* Case study: give admin access to dashboard
+
+.code src/dashboard_admin.yaml
+
+In dashboard's deployment.yaml: 
+
+  "serviceAccountName": "kubernetes-dashboard",
+
+for minimum prividges, refer to:   
+
+.link https://github.com/kubernetes/kubernetes/blob/master/cluster/addons/dashboard/dashboard-rbac.yaml Dashboard minimum 
+
+* Default roles, rolebindings
+
+.image ./images/default_roles.png _ 1000
+
+.image ./images/default_core_components.png _ 1000
+
+* Demystify how pod's request pass access control 
+
+A service account definition  
+
+.code src/api-explorer.yaml
+
+* Service Account Secret
+
+.image ./images/sa_secret.png
+
+* Service Account's Token
+
+.image images/sa_jwt.png
+
+* Secret mounted in each pods
+
+  ls /var/run/secrets/kubernetes.io/serviceaccount/
+
+.image ./images/sa_mount.png
+
+K8s golang client use token and cert to make HTTPS request
+
+* Reproduce HTTPS request using CURL
+
+setup sa, role, rolebindings
+
+  kubectl create namespace demo
+  kubectl create serviceaccount api-explorer -n demo
+  kubectl apply -f cluster_role.yaml
+  kubectl aplly -f role_binding.yaml
+
+get token, ca.cert of sa
+
+.code src/sa_curl.sh
+
+* Test with curl
+
+Without providing token:
+
+ curl -s $APISERVER/api/v1/namespaces/demo/pods/ --cacert /tmp/ca.crt
+
+Providing correct token:
+
+list pods in demo namespace
+
+ curl -s $APISERVER/api/v1/namespaces/demo/pods/ \
+ --header "Authorization: Bearer $TOKEN" --cacert /tmp/ca.crt
+
+list pods in other namespace
+
+ curl -s $APISERVER/api/v1/namespaces/default/pods/ \
+ --header "Authorization: Bearer $TOKEN" --cacert /tmp/ca.crt
+
+* Test result
+
+.image ./images/sa_curl_test.png 600 _
+
+* Conclusion
+
+- Understand big picture of K8s authentication and autorization
+- Understand related concepts: service account, role/clusterrole, rolebinding/clusterrolebinding
+
+* Big picture
+
+.image ./images/big_picture_mindmup.png _ 800
+
+.link https://atlas.mindmup.com/2019/09/bed2c170da7611e99906a1527309011e/k8s_api_server/index.html API server access control
+
+
+* Reference
+
+.link https://kubernetes.io/docs/reference/access-authn-authz/controlling-access/ Controlling Access to the Kubernetes API
+.link https://stackoverflow.com/questions/54889458/kubernetes-check-serviceaccount-permissions Kubernetes check serviceaccount permissions
+.link https://medium.com/@nieldw/curling-the-kubernetes-api-server-d7675cfc398c cURLing the Kubernetes API server
+.link https://stackoverflow.com/questions/3297048/403-forbidden-vs-401-unauthorized-http-responses?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa 403 Forbidden vs 401 Unauthorized HTTP responses
+.link https://unofficialism.info/posts/accessing-rbac-enabled-kubernetes-dashboard/ Accessing RBAC enabled Kubernetes Dashboard
+.link https://www.nccgroup.trust/us/about-us/newsroom-and-events/blog/2019/august/tools-and-methods-for-auditing-kubernetes-rbac-policies/ Tools and Methods for Auditing Kubernetes RBAC Policies

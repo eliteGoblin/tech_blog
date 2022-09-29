@@ -1,0 +1,443 @@
+Microservice Monitoring 
+17 Apr 2019
+
+Frank Sun
+Golang Developer
+elitegoblinrb@gmail.com
+http://elitegoblin.github.io
+
+* Roadmap
+
+- Background: challenges in microservice architecture
+- Monitoring framework in 4000 feets
+- Profiling
+- Distributed tracing
+- Event based monitoring(logging)
+- Full Big picture of monitoring framework
+- Metric based monitoring
+- Realtime monitoring using Prometheus
+- Conclusion
+- Appendix
+
+* Goal of session
+
+- Big picture of monitoring system
+- How Prometheus works
+
+.link https://app.mindmup.com/map/_free/2019/04/d4d88bb060b111e99eb15332e2cd5da1 Monitoring Framework
+
+
+* Why am I interested in (realtime) monitoring
+
+- Importance of visualize
+- Gain ideas what system's inside looks like when everything's normal
+- First place to look at when issue happens(stucked thread, memory leakage, slow RDS)
+
+* All start from Netdata
+
+.link https://my-netdata.io/#demosites netdata live demo sites
+
+Simple to install
+
+`bash <(curl -Ss https://my-netdata.io/kickstart.sh)`
+
+* Book: Art of monitoring
+
+.image images/art_of_monitoring.jpg _ 1000
+
+* Book: Google SRE book
+
+.image images/sre.png _ 450
+
+* Book: Prometheus up and running
+
+.image images/prometheus.jpeg _ 360
+
+* Evolution of microservice architecture
+
+* Mono architecture
+
+.image images/mono_arch.png _ 600
+
+* Vertically splitted services
+
+.image images/v_split.png _ 600
+
+* Microservice typical architecture
+
+.image images/microservice_architecture.png _ 800
+
+* Reality is
+
+.image images/mess.jpeg _ 700
+
+* Microservice architecture fallacies
+
+- The network is reliable.
+- Latency is zero.
+- Bandwidth is infinite.
+- The network is secure.
+- Topology doesn't change.
+- There is one administrator.
+- Transport cost is zero.
+- The network is homogeneous.
+
+.link https://dzone.com/articles/understanding-the-8-fallacies-of-distributed-syste Understanding the 8 Fallacies of Distributed Systems
+
+* One administrator
+
+Who's your service's system administrator? Yourself!
+
+- There is no one person who knows everything: configurations, release, trouleshooting, external dependencies 
+- Everyone Should Be Responsible for their own service(including release)
+- Logging and Monitoring really matters: centralized logging, design monitoring from the start
+
+* How do top tech companies do monitoring
+
+.image images/netflix.png
+
+- Hystrix: latency and fault tolerance library
+- Chaosmonkey: resiliency tool that helps applications tolerate random instance failures
+
+It is said that Netflix use 10% computing resources as monitoring framework
+
+
+* Goal of monitoring in high-level
+
+- Alert: call someone to investigate/take action
+- Help debugging/investigate
+- Trending:  see how your systems are being used and
+changing over time (technical and business)
+
+All about collecting helpful events happened in microservice system
+
+Events: HTTP request, packet being send out, library call being made, blackbox probe failing...
+
+* Data collecting
+
+Better to record all events along with their context, but not practical
+
+We need to decide what data needed and how to collect them
+
+Can be breaked into 4 categories
+
+.image images/high_level.png _ 800
+
+* Monitoring framework in 4000 feets
+
+* Profiling
+
+Profile of OS, app
+
+.image images/pprof_cpu.png _ 800
+
+* Distributed Tracing: calling chain and latency
+
+.image images/trace_big_picture.jpg
+
+* Distributed Tracing: dependency graph
+
+.image images/zipkin-graph.png
+
+* Logging
+
+Deals with discrete events
+
+.image images/kibana.jpg _ 800
+
+* Metric
+
+Numeric value that aggregatable
+
+.image images/grafana.png _ 800
+
+* Tracing vs Logging vs Metric
+
+.image images/vs.png
+
+* Profiling
+
+- Linux kernel profiling
+- Network filtering
+- Debug builds of binaries that track profiling data: cpu/mem profile, flame graph
+
+Usually NOT used on prod
+
+* Linux kernel profiling
+
+.image images/bcc_tracing_tools.png _ 800 
+
+* Golang cpu profile: pprof
+
+.image images/pprof_cpu.png _ 800
+
+* Golang cpu profile: flame graph
+
+.image images/pprof-ui-flamegraphs.gif
+
+* Tracing Demo
+
+.link http://106.75.237.45:8080/#/monitor/dashboard skywalking live demo 
+
+TraceId: 4.41.15554566184671097
+
+
+Github link
+.link https://github.com/apache/incubator-skywalking github/incubator-skywalking
+
+* Logging(event based monitoring)
+
+Logging is essentially events
+
+Logging looks at a limited set of events and records some of the context for each of these events.
+
+- Subset of all the events occured
+- Large disk storage needed: request logs: 1000 qps * 1K = 1 MB/s = 84GB/day
+- No sampling of events
+
+* Popular products/solutions
+
+- Enterprise: Splunk(SaaS and on-premise)
+- Opensource: ELK/EFK stack, Graylog
+
+* Days before ELK
+
+Background: 
+
+- Service write log to local
+- Rotate per day
+
+When debug: 
+
+- Need to know the host which request executed
+- awk, sed, grep...
+- May need to unzip first(zgrep)
+
+* ELK stack
+
+.image images/elbk.jpg
+
+* ELK stack simple architecture
+
+.image images/elk_simple.jpg
+
+- Input:  File, Stdin, TCP, Syslog, Redis, Collectd..
+- Filter: Format log, usually to JSON, (regex filter by Grok)
+- Output: Stdout, Elasticsearch, Redis, TCP, File...
+
+* ELK with message queue
+
+.image images/cluster_msq.jpg
+
+Use message queue to avoid data loss in peak time: redis/kafka
+
+* EFK(ELFK)
+
+.image images/efk.jpg
+
+Filebeat to replace logstash
+
+- Golang
+- No JVM dependency, less CPU and memory
+
+* GUI: Kibana
+
+.image images/kibana.jpg _ 800
+
+* Metric based monitoring
+
+Metrics largely ignore context, instead tracking aggregations over time of different types of events
+
+* Analogy of metric
+
+- Exposure inside, Whitebox
+- Realtime dashboard
+
+.image images/plane_dashboard.jpg
+
+* Analogy of logging
+
+Postmortem analysis
+
+.image images/black_box.jpeg _ 400
+
+* Logging features summary
+
+- Used to provide as much specific detail as possible
+- Log data format tends can be longer, freestyle of fields
+- Easy to navigating down to the root cause after issue happened, good for performing forensic analysis
+- Mining of something not designed before head
+
+Example: mining of top10 most popular buslane in top city of China
+
+* Metric based monitoring
+
+Ignore individual events, track how often events show up, like:
+
+In past minute
+
+- 3594 HTTP request happened 
+- 14 failed request
+- 85 for login request
+- 5.4 MB transfered
+- 2023 cache hits
+
+etc
+
+It does not care what happens in a particular request
+
+* Big picture of metric monitoring
+
+.image images/metric_highlevel.png
+
+* What is a metric?
+
+Metric format in Prometheus
+
+<metric name>{<label name>=<label value>, ...}
+
+
+HTTP request: 
+
+api_http_requests_total{method="POST", handler="/messages"}
+
+
+* Metric consuming engine
+
+Store and query of metrics  
+
+Metric data stored as time series
+
+Time series: series of data points listed in time order
+
+Consumer of metric data will add timestamp(and instance of metric sender), and store them in timeseries
+
+Ability to query/aggragate metric data, like SQL: 
+
+SELECT COUNT(*) FROM TABLE
+
+* Metric consuming: Pull vs Push
+
+- Push used by collectd/statsd/graphite stack
+- Pull used by Prometheus
+- Differ in who initialize the connection
+- Pull seems more flexible
+
+* Push Mode
+
+- Pusher need to know consumer
+- Might overload consumer
+- Client decide what and when to send, but data can be configured to be sampled
+
+* Pull Mode
+
+- Pusher just expose metric to HTTP handler, wait to be retrieved
+- Monitor decides when and what to scrape
+- Need service discovery to discover dynamic metric sender
+- Same metric can be used in multiple monitoring system from different teams
+
+* Pull vs Push
+
+Suffice to say both have pros and cons, and overall it doesn’t matter much. by Brain Brazil
+
+* Big picture of Monitoring Framework
+
+.link https://app.mindmup.com/map/_free/2019/04/d4d88bb060b111e99eb15332e2cd5da1 Monitoring Framework
+
+* Prometheus
+
+.image images/prometheus.png _ 800
+
+* From Google's BorgMon
+
+.image images/gstack.jpg
+
+* Prometheus architecture: simplified version
+
+.image images/prometheus_simple_arch.png
+
+* Cool things about Prometheus
+
+- Most features in Go binary, 20+MB
+- Easy to deploy, efficient, fast
+- Easy to extend using various exported
+- Time series collection via pull model over HTTP
+- Time series in metric name and key/value pairs
+- Powerful PromQL to aggragate, transform numeric data
+- Perfect with Grafana as UI
+
+* Prometheus Demo
+
+.link https://github.com/eliteGoblin/prometheus_demo prometheus demo repo
+
+* Prometheus Demo Architecture
+
+.image images/demo_arch_ports.png _ 800
+
+* Prometheus Configuration
+
+
+.code src/prometheus.yml
+
+* Demo Agenda
+
+- First view of Prometheus
+- Connect Prometheus with Grafana
+- Backend app monitoring demo
+- Redis monitoring demo
+
+* First glance of Prometheus
+
+.image images/prometheus_overview.gif _ 1000
+
+* Connect Prometheus with Grafana
+
+.image images/connect_grafana.gif _ 1000
+
+* Host monitoring
+
+.image images/node_exporter.gif _ 1000
+
+* Monitoring Golang processes
+
+.link https://grafana.com/dashboards/240 Go Processes
+
+.image images/golang_exporter.gif _ 1000
+
+* Backend App's customised metric
+
+.code src/backend_demo.go /START OMIT P1/,/END OMIT P1/
+
+* Backend App's customised metric
+
+.code src/backend_demo.go /START OMIT P2/,/END OMIT P2/
+
+* Customised Metric demo
+
+.image images/backend_metric.gif _ 1000
+
+* Prometheus architecture
+
+.image images/prometheus_architecture.png _ 800
+
+* What we should monitor? 
+
+RED Method: Requests Rate, Errors, Duration..
+
+
+
+* Conclusion
+
+- Four parts of monitoring framework, big picture
+- Prometheus architecture, pull mode
+
+
+* Reference
+
+.link https://cloud.tencent.com/info/53599ab31dfe9cf9bc10d5d0f2700214.html 从 ELK 到 EFK 演进
+.link https://stackoverflow.com/questions/44388518/what-is-the-role-of-logstash-shipper-and-logstash-indexer-in-elk-stack What is the role of Logstash Shipper and Logstash Indexer in ELK stack? 
+.link http://peter.bourgon.org/blog/2017/02/21/metrics-tracing-and-logging.html?spm=a2c4e.11153940.blogcont514488.18.11b711f4CzZf8S Metrics, tracing, and logging
+.link https://www.slideshare.net/brianbrazil/what-does-monitoring-mean-fosdem-2017 What does "monitoring" mean? 
+.link https://grafana.com/files/grafanacon_eu_2018/Tom_Wilkie_GrafanaCon_EU_2018.pdf RED Method
+.link https://cloud.google.com/blog/products/gcp/availability-part-deux-CRE-life-lessons SLOs, SLIs, SLAs, oh my - CRE life lessons
+.link http://www.yunweipai.com/archives/10703.html 深度剖析什么是 SLI、SLO和SLA？

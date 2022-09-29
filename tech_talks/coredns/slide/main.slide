@@ -1,0 +1,423 @@
+K8s Internal Service Discovery and DNS
+23 Oct 2019
+
+Frank Sun
+Golang Developer
+elitegoblinrb@gmail.com
+http://elitegoblin.github.io
+
+
+* Why this session
+
+- what happened when http://tile-svc/v1/xxx
+- why we need DNS in K8s cluster
+- How DNS is setup in k8s
+- How is internal DNS work with external DNS
+
+* Goals
+
+- Understand how DNS works in K8s(ClusterIP and Headless)
+- Understand DNS basic concepts and terminology
+- Know how CoreDNS works in K8s
+- Understand a request's DNS life cycle
+
+* Motivation of Service in K8s
+
+Thinking of two sets of pods: Pods Group A want to communicate with Pods group B
+
+- Every pods have own IPs
+- Using IP means tightly couple front-end and backend
+
+We can't rely on IP to communicate with other pods, we need something act in between, like nginx; 
+
+There's where service come in. 
+
+But how we know the IP of service?
+
+* K8s Internal Service Discovery
+
+K8s Service type:
+
+- ClusterIP
+- Headless
+- NodePort
+- External Names
+
+For internal discovery: Service With ClusterIP and Headless. 
+
+K8s use DNS to do internal service discovery(env variables deprecated)
+
+* K8s, Service and endpoints
+
+- Each pod have IP, all pod can reach any other pod
+- Service(usually) use selector to select pods
+- Each backend pod have a corresponding endpoint object
+- Controller continuously scans for Pods that match its selector, then POSTs any updates to an Endpoint object(same name of service)
+
+.image images/endpoints.png 350 _
+
+* Service with ClusterIP
+
+.image images/service.png
+
+- ClusterIP is virtual IP, it's stable
+- K8s DNS resolve service name to VIP
+- Client make request to VIP and loadbalanced to backend Pods(by iptables or methods)
+
+* Service with ClusterIP
+
+VIP implemented by iptable(newest is by IPVS)
+
+.image images/cluster_ip.png
+
+1. Frontend pod make request to K8s DNS: tiles-svc
+2. DNS replied with VIP
+3. Frontend pod made a request, http://VIP/my/url/path
+4. iptable redirect request to backend pods(randomly)
+
+Every node in a Kubernetes cluster runs a kube-proxy. kube-proxy is responsible for implementing a form of virtual IP for Services(except ExternalName)
+
+.link https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies virtual-ips-and-service-proxies
+
+K8s DNS return VIP for service with ClusterIP
+
+* How IP table works
+
+- Tiles-svc: Cluster IP: 100.65.134.86
+- Endpoints: 100.101.20.62, 100.105.162.7
+
+  sudo /sbin/iptables -S -t nat  
+
+.play src/iptable.txt
+
+* Why not use round-robin DNS
+
+- DNS server cache period
+- Client might cache it(or never repoll again)
+- Minimize cache period might overload DNS server
+
+iptable(netfilter) is inside kernel and is efficient
+
+* Headless Service
+
+- No ClusterIP allocated
+- DNS query return all IPs of backend pods
+- Client need to choose one IP: aka client side service discovery/load balancing
+
+* DNS tool
+
+infoblox/dnstools contain helpful DNS tools: 
+
+- dig
+- host
+- dnsperf
+
+  kubectl run --restart=Never -it --image infoblox/dnstools dnstools
+
+* DNS query for ClusterIP
+
+if from pods in same namespace: 
+
+  host tiles-svc
+
+output: 
+
+  tiles-svc.auqa-api.svc.cluster.local has address 100.65.134.86
+
+pods in different namespace
+
+  host tiles-svc.auqa-api.svc.cluster.local
+
+output:
+
+  tiles-svc.auqa-api.svc.cluster.local has address 100.65.134.86
+
+* DNS query for headless service
+
+.code src/stateful.yaml /START1 OMIT/,/END1 OMIT/
+
+* DNS query for headless service
+
+.code src/stateful.yaml /END1 OMIT/,/END2 OMIT/
+
+* DNS query for headless service
+
+  dig nginx.kepler-qa1-us2.svc.cluster.local  
+
+  ;; ANSWER SECTION:
+  nginx.kepler-qa1-us2.svc.cluster.local. 5 IN A  100.96.11.92
+  nginx.kepler-qa1-us2.svc.cluster.local. 5 IN A  100.96.10.242
+
+* In our cluster
+
+Access area-svc:
+
+  areasClient = areakeys.NewClient("http://areas-svc/xxxx", ...)
+
+Access photodb(inject to env var in pods):
+
+  DB_URL: "postgres://user:password@photosdb:5432/..."
+
+* FQDN
+
+- Why sometimes the short name?
+- Why trailing dot? 
+working
+
+  ping en.wikipedia.org.
+
+not working
+
+  ping en.wikipedia.org..
+
+* FQDN: fully qualified domain name
+
+.image images/fqdn.png
+
+FQDN is like absolute domain name
+
+* DNS config: /etc/resolve.conf
+
+We mean the DNS client's config
+
+.code src/resolv.conf
+
+before goto DNS, it looks for /etc/hosts file
+
+.code /src/hosts
+
+  host zipkin.istio-system
+
+  zipkin.istio-system.svc.cluster.local has address 100.64.113.161
+
+* External DB name
+
+Service with type: ExternalName
+
+.code src/external_db.yaml
+
+* External DB name
+
+  dig photosdb.auqa-api.svc.cluster.local
+
+  ;; ANSWER SECTION:
+  photosdb.auqa-api.svc.cluster.local. 7 IN CNAME	
+    survey-auqa-api.XXXXXX.ap-southeast-2.rds.amazonaws.com.
+  survey-auqa-api.XXXXXX.ap-southeast-2.rds.amazonaws.com. 7 IN CNAME
+    ec2-XX.XX.XX.XX.ap-southeast-2.compute.amazonaws.com.
+  ec2-XX.XX.XX.XX.ap-southeast-2.compute.amazonaws.com. 7 IN A 172.20.xx.xxx
+
+When we specify db url: 
+
+  postgres://user:password@photosdb:5432/...
+
+Actually conn str is: 
+
+  postgres://user:password@172.20.xx.xxx:5432/...
+
+* Kubernetes DNS Specification
+
+Given a Service named <service> in Namespace <ns> with ClusterIP <cluster-ip>
+
+A Record must exist: 
+
+  <service>.<ns>.svc.<zone>. <ttl> IN A <cluster-ip>
+
+There must be an A record for each ready endpoint of the headless Service with IP address <endpoint-ip> as shown below
+
+  <service>.<ns>.svc.<zone>. <ttl> IN A <endpoint-ip>
+
+.link https://github.com/kubernetes/dns/blob/master/docs/specification.md Kubernetes DNS Specification 
+
+Internal service discovery in K8s, is to support: 
+
+Any 2 pods can access each other via container network
+
+* Service Discovery with Environment Variables(deprecated)
+
+Kubernetes also environment variables: 
+
+.image images/env.png
+
+* DNS terminalogies and concepts
+
+- Zone
+- A Records
+- CNAME Records
+- SRV Records
+- PTR Record
+- Authority
+
+* DNS 
+
+.image images/dns_namespace.png
+
+* Different angles of DNS
+
+- A naming system that maps names to other data, such as IP addresses, mail routing information, and more.
+- One of the largest distributed databases in the world
+- Cleint-server system(DNS clients are often called resolvers, DNS servers are sometimes called name servers)
+
+* Domains, Delegation, and Zones
+
+.image images/domain_zone.png 500 _ 
+
+domain foo.example, with the node foo.example at its apex.
+
+* Domains, Delegation, and Zones
+
+- Domain: group of nodes in a particular subtree of the namespace
+- Delegate: let other organization/team to manage a sub-domain
+- A zone is a domain minus the subdomains that have been delegated elsewhere
+- If no delegation, zone and domain contains same (DNS) nodes
+
+Example: DNS admin of nearmap.com, create api.nearmap.com, so API team can create test.api.nearmap.com
+
+Each zone has it's own data
+
+* DNS data: Resource Records(RR)
+
+Compared to RDBMS: 
+
+- domain is database instance
+- zone is different tables/partitions
+- RR is actual records
+
+RR types: 
+
+- A: Maps a domain name to a single IPv4 address
+- AAAA: Maps a domain name to a single IPv6 address
+- CNAME: Maps a domain name (the alias) to another domain name (the canonical name)
+- NS: Names a name server (or DNS server) for a zone
+- PTR: Maps an IP address back to a domain name
+- SOA: Provide summary information about a zone(only one SOA record per zone)
+
+* DNS Servers and Authority
+
+- DNS Servers have two responsibilities: answer queries and query other DNS(an Authority DNS only need to know own zone)
+- Zone data file to contain all the info of zone
+- Primary DNS server: DNS server that load zone data file
+- Secondary DNS server transfer data from Primary DNS
+
+.image images/primary_secondary.png
+
+* DNS Servers and Authority
+
+- Authoritative DNS server for a zone: Both the primary and secondary DNS servers 
+- A zone have several name servers(A DNS server also may serve many zones)
+- Cache in several layers: local dns, each nameservers
+
+  sudo systemd-resolve --flush-caches
+  dig www.infoblox.com
+
+fist time: 
+
+.image images/dns_fst.png
+
+second time: 
+
+.image images/dns_second.png
+
+
+A DNS server authoritative for nearmap.com, return S records if queried nearmap.com, means: 
+
+“If you’re interested in domain names that end in foo.example, you should talk to one of these three DNS servers.” (called a referral)
+
+
+* DNS resolve workflow
+
+.image images/dns_resolve.png
+
+We can use any node as our dns server, like Google Pulic DNS: 8.8.8.8
+
+Show DNS trace using dig: 
+  
+  sudo systemd-resolve --flush-caches
+  dig +trace www.nearmap.com @8.8.8.8
+
+* Why a new DNS?
+
+- Written in Go, plug-in style design
+- Big one like BIND(Berkeley Internet Name Domain) not suitable for k8s situations
+- Single container per instance, vs kube-dns which uses three
+- Better integration with Cloud(Route53)
+- CoreDNS enables negative caching in the default deployment
+
+The short answer: basically anyone running Kubernetes, and most folks running containerized applications.
+
+* How CoreDNS works
+
+.image images/coredns.png _ 500
+
+CoreDNS creates a watch on the Services and Endpoints resources, and caches that data.
+
+* CoreDNS integration in our K8s cluster
+
+.code src/resolv.conf
+
+.image images/coredns_svc.png
+
+* Sample CoreDNS configuration
+
+.code src/coredns_config
+
+* Sample CoreDNS configuration
+
+- .:53: start a DNS server block for root domain and underneath
+- health plug-in exposes a health-check endpoint for the kubelet to monitor whether CoreDNS is alive and functioning
+- Kubernetes plug-in: format: kubernetes CLUSTER_DOMAIN REVERSE_CIDRS
+- Ustream: plug-in to resolve canonical name (CNAME) records
+- Forward: enable the forward plug-in for root zone("."), any queries received by this server that are not handled by an earlier plug-in will be forwarded.
+- Cache: 30s
+- loops: a defensive plug-in that is used to detect DNS query loops.
+- loadbalance: randomly shuffles A/AAAA records in the response
+- reload: reload config without restart CoreDNS(can be dangerous)
+
+* Put it altogether: What happens when request is made
+
+* Request to K8s internal service
+
+Example request: 
+
+  http://tile-svc/v1/xxx
+
+.image images/internal_dns.png
+
+* A map browser request's journey
+
+Example request: 
+
+  https://au-api.nearmap.com/tiles/v3/Vert/18/241180/157317.img   
+
+.image images/request.png 500 _
+
+* A little bit on ingress object
+
+.image images/ingress.png _ 500
+
+* Ingress
+
+- Allows access to k8s services from outside, abstract Layer 7 routing rules
+- Compared to other methods: nodeport and loadbalancer, decouple, no extra host/ip needed
+
+.code src/ingress_rules.yaml
+
+* Review
+
+- Understand how DNS works in K8s
+- Understand DNS basic concepts: zone, domain, authority, RR records
+- Know how CoreDNS works in K8s
+- Understand a client request's full DNS life cycle
+- Use infoblox/dnstools(dig) to debug dns response
+
+* Reference
+
+.link https://www.oreilly.com/library/view/learning-coredns/9781492047957/ Learning CoreDNS
+.link https://www.linuxbabe.com/ubuntu/set-up-local-dns-resolver-ubuntu-18-04-16-04-bind9 How to Set Up a Local DNS Resolver on Ubuntu 18.04, 16.04 with BIND9  
+.link https://support.rackspace.com/how-to/using-dig-to-query-nameservers/ Use dig to query nameservers  
+.link https://aws.amazon.com/premiumsupport/knowledge-center/partial-dns-failures/ How does DNS work, and how do I troubleshoot partial DNS failures?  
+.link https://tools.ietf.org/html/rfc1034 DOMAIN NAMES - CONCEPTS AND FACILITIES  
+.link https://stackpointer.io/internet/get-authoritative-dns-for-domain/435/ How to Get Authoritative DNS for Domain  
+.link http://wsfdl.com/%E8%B8%A9%E5%9D%91%E6%9D%82%E8%AE%B0/2017/01/12/iptables_snat.html   同局域网下的 Iptables DNAT
+.link http://linux-ip.net/html/nat-dnat.html Destination NAT with netfilter 
+.link https://matthewpalmer.net/kubernetes-app-developer/articles/kubernetes-ingress-guide-nginx-example.html Kubernetes Ingress with Nginx Example

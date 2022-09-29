@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: api-explorer:log-reader
+  namespace: ns-role
+subjects:
+- kind: ServiceAccount
+  name: api-explorer
+  namespace: demo
+roleRef:
+  kind: ClusterRole
+  name: log-reader
+  apiGroup: rbac.authorization.k8s.io

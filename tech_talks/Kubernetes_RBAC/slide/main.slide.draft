@@ -1,0 +1,170 @@
+Kubernetes RBAC
+17 Sep 2019
+
+Frank Sun
+Golang Developer
+elitegoblinrb@gmail.com
+http://elitegoblin.github.io
+
+* Main Goal
+
+- Why Concurrency and what are common pitfalls of concurrency
+- What are Go concurrency building blocks
+- How to choose correct concurrency tools under different scenario 
+
+* Roadmap
+
+- Why concurrency
+- Concurrency pitfalls
+- Race condition, atomicity
+- Deadlocks, Livelocks, and Starvation
+- Goroutine, channel, select
+- Sync package: mutex, cond, atomic
+- How we choose tools best for us 
+- Futher topics I'm interested
+
+* RBAC from 5000 feet
+
+- Limiting access to the Kubernetes API
+- RBAC was introduced into Kubernetes with version 1.5 and became generally avail‐able in Kubernetes 1.8
+- Prevent unexpected accidents where one person in the wrong
+namespace mistakenly takes down production
+- RBAC by itself is sufficient to protect you
+- Every request to Kubernetes is first authenticated
+- Is For pod, not single container
+- Kubernetes is an entirely API-based system
+- To interact with the Kubernetes API you need a ServiceAccount with the correct permissions, obtained through a (Cluster)Role and a RoleBinding. Authenticate by using the ServiceAccount’s token. Since all communication is over TLS you also need the self-signed certificate.
+
+*  Authentication
+
+- unauthenticated, could integrate deeply with a pluggable authentication provider
+(e.g., Azure Active Directory) to establish an identity within that third-party system
+- Kubernetes does not have a built-in identity store
+- Every request that comes to Kubernetes is associated with some identity. Even a
+request with no identity is associated with the system:unauthenticated group
+- Kubernetes makes a distinction between user identities and service account identities.
+- Service accounts are created and managed by Kubernetes itself and are generally asso‐
+ciated with components running inside the cluster
+- User accounts are all other
+accounts associated with actual users of the cluster, and often include automation like
+continuous delivery as a service that runs outside of the cluster
+- Kubernetes uses a generic interface for authentication providers
+- All components, such as a kubelet running on a node, as well as
+users issuing kubectl commands, need to communicate with the
+API server
+
+*  Strategies
+
+[Authentication strategies](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#authentication-strategies)
+
+*  User, Groups
+
+- When managing a large number of people in different organizations with similar
+access to the cluster, it’s generally a best practice to use groups to manage the roles
+that define access to the cluster, rather than individually adding bindings to specific
+identities
+- to enable any individual to gain access to the group’s role, that individual
+needs to be added to the group
+- granting roles to individuals, it’s much harder to clearly understand
+the appropriate (i.e., minimal) privileges required for each team, especially when an
+individual may be part of multiple different teams
+- groups are supplied by authentication providers
+
+*  See if RBAC is enabled
+
+*  Authorization
+
+combination
+of the identity of the user, the resource (effectively the HTTP path), and the verb or
+action the user is attempting to perform
+Other‐wise, an HTTP 403 error is returned
+- A role is a set of abstract capabilities
+- role binding is an assignment of a role to one or more identities
+- Role resources are namespaced, and repre‐
+sent capabilities within that single namespace
+
+*  API server 
+
+- non-protected: 8080, example
+- HTTPS: using curl to demo; packet capture of HTTPS while kubectl proxy
+- To enable RBAC, start the apiserver with --authorization-mode=RBAC
+
+```
+ssh -i ~/.ssh/k8s_dev admin@bastion.sagan-au1-qa.nearmapdev.com
+ssh ip-172-20-148-31.ap-southeast-2.compute.internal
+```
+
+```
+/usr/local/bin/kube-apiserver --allow-privileged=true --anonymous-auth=false --apiserver-count=3 --authorization-mode=RBAC --basic-auth-file=/srv/kubernetes/basic_auth.csv --bind-address=0.0.0.0 --client-ca-file=/srv/kubernetes/ca.crt --cloud-provider=aws --enable-admission-plugins=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,DefaultTolerationSeconds,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,NodeRestriction,ResourceQuota --etcd-cafile=/etc/kubernetes/pki/kube-apiserver/etcd-ca.crt --etcd-certfile=/etc/kubernetes/pki/kube-apiserver/etcd-client.crt --etcd-keyfile=/etc/kubernetes/pki/kube-apiserver/etcd-client.key --etcd-servers-overrides=/events#https://127.0.0.1:4002 --etcd-servers=https://127.0.0.1:4001 --insecure-bind-address=127.0.0.1 --insecure-port=8080 --kubelet-client-certificate=/srv/kubernetes/kubelet-api.pem --kubelet-client-key=/srv/kubernetes/kubelet-api-key.pem --kubelet-preferred-address-types=InternalIP,Hostname,ExternalIP --proxy-client-cert-file=/srv/kubernetes/apiserver-aggregator.cert --proxy-client-key-file=/srv/kubernetes/apiserver-aggregator.key --requestheader-allowed-names=aggregator --requestheader-client-ca-file=/srv/kubernetes/apiserver-aggregator-ca.cert --requestheader-extra-headers-prefix=X-Remote-Extra- --requestheader-group-headers=X-Remote-Group --requestheader-username-headers=X-Remote-User --secure-port=443 --service-cluster-ip-range=100.64.0.0/13 --storage-backend=etcd3 --tls-cert-file=/srv/kubernetes/server.cert --tls-private-key-file=/srv/kubernetes/server.key --token-auth-file=/srv/kubernetes/known_tokens.csv --v=2
+```
+
+*  you should ensure that the --anonymous-auth=false flag is set on your API server
+
+* API groups
+
+* Verbs
+
+- The verbs correspond roughly to HTTP methods(p190)
+- built-in roles(p191)
+
+*  Techniques for Managing RBAC
+
+- can-i:  testing if a particular user can do a particular action
+
+*  Out of scope
+
+- Multitenant security
+
+*  Demo time
+
+```
+kubectl create namespace demo
+kubectl create serviceaccount api-explorer -n demo
+kubectl apply -f cluster_role.yaml
+kubectl aplly -f role_binding.yaml
+```
+
+```
+export SERVICE_ACCOUNT=api-explorer
+export SECRET=$(kubectl get serviceaccount ${SERVICE_ACCOUNT} -o json -n demo| jq -Mr '.secrets[].name | select(contains("token"))')
+export TOKEN=$(kubectl get secret ${SECRET} -o json -n demo| jq -Mr '.data.token' | base64 -d)
+kubectl get secret ${SECRET} -o json -n demo| jq -Mr '.data["ca.crt"]' | base64 -d > /tmp/ca.crt
+kubectl -n default get endpoints kubernetes --no-headers
+export APISERVER=https://api.sagan-au1-qa.nearmapdev.com:443
+curl -s $APISERVER/api/v1/namespaces/demo/pods/ --header "Authorization: Bearer $TOKEN" --cacert /tmp/ca.crt | jq -rM '.items[].metadata.name'
+# 403
+curl -s $APISERVER/api/v1/namespaces/default/pods/ --header "Authorization: Bearer $TOKEN" --cacert /tmp/ca.crt
+# 401
+export TOKEN=
+curl -s $APISERVER/api/v1/namespaces/demo/pods/ --header "Authorization: Bearer $TOKEN" --cacert /tmp/ca.crt
+```
+
+ Receiving a 401 response is the server telling you, “you aren’t authenticated
+
+*  client-go code analysis
+
+*  Conclusion
+
+big picture of authentication, rbac
+
+*  Homework
+
+- create a namespace, play with it
+
+*  kubectl proxy works
+
+- http to proxy, proxy using its own certificate/token to 
+
+*  Questions
+
+- Once rotate, will it take effect on running pods?
+- Change role, rolebinding will affect running?
+- Bind multiple roles
+- List a user/sa's all priviledges
+- Group rbac example? 什么情况会authenticate为group?
+
+*  Reference
+
+[cURLing the Kubernetes API server](https://medium.com/@nieldw/curling-the-kubernetes-api-server-d7675cfc398c)
+[403 Forbidden vs 401 Unauthorized HTTP responses](https://stackoverflow.com/questions/3297048/403-forbidden-vs-401-unauthorized-http-responses?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa)
+[Status Code Definitions](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)

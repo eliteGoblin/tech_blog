@@ -1,0 +1,192 @@
+Log trace inside a golang service
+06 May 2019
+
+Frank Sun
+Golang Developer
+elitegoblinrb@gmail.com
+http://elitegoblin.github.io
+
+* Goals
+
+- How to trace a request in log
+- How to use context package to pass values and cancel goroutine
+
+* Roadmap
+
+- Why(attach requestId in log entry)
+- Natural solution
+- Do it in Golang way: use context package
+- Another function of context: cancellation
+- Imperfect context
+- Conclusion
+
+* Why we need this? 
+
+Without requestId: 
+
+- Finding needle in haystack(imagine 100,000 lines per second)
+- Cannot distinguish log from different requests
+
+Request scope log without requestId worse than no log
+
+* Workflow of investigating a bug: 
+
+- Locate where went wrong, does request reach server?
+- Get requestId, narrow down time range
+- Get all related logs according to requestId
+- All warning, error level logs, syslogs/systemd logs near time range
+
+* Natural solution
+
+Pass requestId(logger with requestId) between functions, requires: 
+
+Each function has extra parameter for requestId
+
+do we have better solution?
+
+* Solution in C++/Java: local storage
+
+- A thread per transaction
+- Use thread local varaible to pass requestId
+
+thread_local definition in C++: 
+
+A variable declared with the thread_local specifier is said to have thread storage duration. Each thread in a program has its own copy of each thread-local variable. 
+
+* thread_local demo
+
+.code src/thread_local.cpp /START OMIT/,/END OMIT/
+
+* Golang way: passing requestId in context package
+
+Became part of Golang since Go1.7
+
+The Go team recommends passing context explicitly as function argument instead of using goroutine local storage. 
+
+* context.Context 
+
+How to store and pass requestId using context
+
+context definition in go, Value() function
+
+.code src/context.go
+
+* Demo: pass requestId use context
+
+.code src/context_value_pass.go
+
+* Why we need context
+
+We could just pass the requestId?
+
+- Context is a general way to pass values, value inheritance
+- Context can do cancellation/deadline of goroutines
+
+"At Google, we developed a context package that makes it easy to pass request-scoped values, cancelation signals, and deadlines across API boundaries to all the goroutines involved in handling a request. "
+
+"At Google, we require that Go programmers pass a Context parameter as the first argument to every function on the call path between incoming and outgoing requests."
+
+* Cancellation of goroutines
+
+.image images/cancel_example1.png _ 700
+
+* RPC2 failed
+
+.image images/cancel_example2.png _ 700
+
+No way to tell RPC3, RPC4 to stop/cancel, waste compute resource
+
+* Usage of context
+
+- Create root context: context.Background
+- Decorate it using context.Withcancel, context.WithTimeout
+- Pass context through control flow
+- We can decorate context anywhere we got a context
+- We need to add cancellation functionality for our goroutine function
+
+API of context: 
+
+.code src/context_api.go
+
+* Context Hello world
+
+Show basic usage of cancel
+
+.code src/context_hello_world.go /START OMIT/,/END OMIT/
+
+* More complicated example
+.image images/context-chain-1.png
+
+.link https://play.golang.org/p/7P-Je5kj9Vq code in playground
+
+* More complicated example
+
+3 seconds reached
+
+.image images/context-chain-2.png
+
+* More complicated example
+
+5 seconds reached
+
+.image images/context-chain-3.png
+
+* Outputs of more complicated example
+
+0s 	  ==> task_1...
+0s 	  ==> task_2...
+0s 	  ==> task_3...
+0s 	  ==> task_5...
+0s 	  ==> task_6...
+0s 	  ==> task_4...
+3s 	 task4: <- context.Done()
+3s 	 <==  task_4...
+5s 	 task5: <- context.Done()
+5s 	 <==  task_5...
+5s 	 task3: <- context.Done()
+5s 	 <==  task_3...
+5s 	 <==  task_2...
+5s 	 <==  task_1...
+5s 	 task6: <- context.Done()
+5s 	 <==  task_6...
+
+* Thinking in context
+
+- Context should flow through your control flow(call chain)
+- All blocking/long operations should be cancelable
+- Context.Value should be request-scoped values
+- Context.Value should inform, not control
+- Context only cancel child nodes, not sibling and parent in call tree
+
+* Imperfect context
+
+- As some people says: context is like virus
+- Context package coupled two different functionality together
+- Overuse of context.Value may obscures your program’s flow/API
+
+Some proposals: seperate context package, add language support similiar as context
+
+* Conclusion
+
+No better solution, use context with care
+
+Rules:
+
+- Put ONLY requestId in context.Value(For log trace)
+- Functions need logging, long running operation, incoming, outgoing request, should consider use context
+- Usually put context as first parameter, sometimes can put in struct, to avoid pass context explicitly between struct's member functions
+
+.link https://play.golang.org/p/egy31TZbqtu context in struct example
+
+
+* Reference
+
+.link https://stackoverflow.com/questions/31932945/does-go-have-something-like-threadlocal-from-java Does Go have something like ThreadLocal from Java?  
+.link https://github.com/jtolds/gls jtolds/gls  
+.link https://stackoverflow.com/questions/11983875/what-does-the-thread-local-mean-in-c11 What does the thread_local mean in C++11?  
+.link https://github.com/golang/go/issues/21355 proposal: Replace Context with goroutine-local storage  
+.link https://faiface.github.io/post/context-should-go-away-go2/ Context should go away for Go 2  
+.link https://blog.golang.org/context Go Concurrency Patterns: Context
+.link https://medium.com/@cep21/how-to-correctly-use-context-context-in-go-1-7-8f2c0fafdf39 How to correctly use context.Context in Go 1.7 
+.link https://blog.lab99.org/post/golang-2017-10-27-video-how-to-correctly-use-package-context.html#zong-jie-context-value 视频笔记：如何正确使用 Context - Jack Lindamood
+.link https://dave.cheney.net/2017/08/20/context-isnt-for-cancellation Context isn’t for cancellation

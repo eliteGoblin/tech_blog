@@ -1,0 +1,526 @@
+Golang Concurrency And Patterns
+31 Jan 2019
+
+Frank Sun
+Golang Developer
+elitegoblinrb@gmail.com
+http://elitegoblin.github.io
+
+* Main Goal
+
+- Why Concurrency and what are common pitfalls of concurrency
+- What are Go concurrency building blocks
+- How to choose correct concurrency tools under different scenario 
+
+* Roadmap
+
+- Why concurrency
+- Concurrency pitfalls
+- Race condition, atomicity
+- Deadlocks, Livelocks, and Starvation
+- Goroutine, channel, select
+- Sync package: mutex, cond, atomic
+- How we choose tools best for us 
+- Futher topics I'm interested
+
+* Why Concurrency
+
+* External driving forces
+
+In real-world systems
+
+- Many things are happening simultaneously
+- Must be addressed “in real-time” by software
+
+# App: UI thread and background thread
+
+.image images/concurrency.png 400 _
+
+* Intenal driving forces
+
+-  Utilize CPU when one task is waiting for IO
+-  Running in parallel make tasks much quicker
+
+Single Gopher
+.image images/single.png _ 500
+
+Gopher Team
+.image images/double.png _ 500
+
+
+* Concurrency v.s. Parallelism
+
+.image images/parallelism.png
+
+* Concurrency v.s. Parallelism (con.) 
+
+# concurrency on single core system
+# example: seperate task to 10 sub-tasks, concurrency design
+
+- Concurrency is about structure, parallelism is about execution
+- Concurrency is a property of the code; parallelism is a property of the running program
+- Concurrency means "isolation", break down into easy-to-understand components
+- Concurrency enables parallelism
+
+Reference:
+.link https://blog.golang.org/concurrency-is-not-parallelism Concurrency is not parallelism
+
+* Concurreny is not easy
+
+- Not uncommon for bugs to exist in code for years before some change in timing
+- Issues can be quite hard to reproduce
+- It's not easy when we are using the wrong tool
+
+We need to know the common pitfalls of concurrency to avoid bring them
+
+# it can be really annoying and error prone, can sleep well at nignt
+# common issue patterns
+
+*  Race Conditions
+
+.play -numbers src/race.go
+
+*  Atomicity
+
+is i ++ atomic?
+
+.code src/incrementi.go /func BenchmarkNotAtomic/,/^}/
+
+*  Atomicity
+
+ $ go test -bench BenchmarkNotAtomic
+
+ 1 times: got 1
+ goos: linux
+ goarch: amd64
+ BenchmarkNotAtomic-8    100 times: got 91
+ 10000 times: got 8453
+ 1000000 times: got 843446
+ 5000000 times: got 4180566
+ 5000000               387 ns/op
+ PASS
+ ok      _/home/frankie/notes/cs/presentations/topics/concurrency/draft/src/atomic       2.337s
+
+*  Atomicity
+
+i++ is equal to: 
+
+- Retrieve the value of i.
+- Increment the value of i.
+- Store the value of i.
+
+Read operation should be atomic right? is it just a single machine command?
+
+*  Atomicity
+
+.image images/cache_coherence.png
+
+- Both the clients have a cached copy of a particular memory block from a previous read
+- Top client updates/changes that memory block
+- Bottom client endup with invalid cache of memory
+
+.link https://en.wikipedia.org/wiki/Cache_coherence Cache coherence
+
+*  Atomic 
+
+# Why should we care
+
+- If something is atomic, implicitly it is concurrency safe
+- Something is atomic will happen in its entirety without anything happening simultaneously in its context, context is important
+# Atomic transaction in DB ?
+- Most statements in Golang are not atomic
+
+
+* Deadlocks, Livelocks, and Starvation
+
+* Deadlocks
+
+Go runtime can detect some deadlocks, only limited to all goroutines must be blocked
+
+.play src/deadlock.go /START OMIT/,/END OMIT/
+
+* Deadlocks: Coffman Conditions
+
+A deadlock situation can arise if and only if 4 conditions hold simultaneously in a system:
+
+- Mutual Exclusion
+- Hold and wait
+- No preemption
+- Circular wait
+
+# avoid: hold and wait, circular wait
+# resource aquisition sequence need to globally sorted
+# keep it simple, just good enough to solve the problem, not to be too clever
+
+* Live Locks
+
+- Processes are alive, but get locked/stucked
+- Actively performing concurrent operations, but do nothing to move the state of the program forward
+- Two much lock contention or try-wait-retry in the same manner 
+
+.image images/livelocks.png
+
+* Live Locks
+
+.link https://play.golang.org/p/_eP_-UGEDg7 example in playground
+
+
+* Starvation
+
+- Where a concurrent process cannot get all the resources needed to perform work
+# Livelocks is a kind of starvation
+- Goroutines have equal priorities, but politer ones more easily got starved
+
+greedy goroutine
+
+.code src/starvation.go /greedyWorker/,/^	}
+
+* Starvation: polite goroutine
+
+.code src/starvation.go /politeWorker/,/^	}
+
+* Starvation
+	
+	const runtime = 1*time.Second
+	wg.Add(2)
+	go greedyWorker()
+	go politeWorker()
+	wg.Wait()
+
+	Polite worker was able to execute 392381 work loops.
+	Greedy worker was able to execute 663761 work loops
+
+- Greedy almost twice the amount of work done
+- We may need some goroutines more greedy, context switch is expensive
+
+* Concurrency Primitives
+
+* Goroutines
+
+Extraordinarily lightweight
+
+.play src/goroutine_size.go /memConsumed/,/^}/
+
+* Goroutines: numbers 
+
+# goroutine pool
+- Goroutine 2.3 KB
+- 8GB == 3 million goroutines
+- Linux default stack size is 2MB
+
+.image images/goroutine_count.png _ 500
+
+reference
+
+.link https://stackoverflow.com/questions/256188/how-much-memory-does-a-thread-consume-when-first-created How much memory does a thread consume when first created?
+
+* Goroutines: Context Switch
+
+.code src/goroutine_bench.go /func BenchmarkContextSwitch/,/^}/
+
+* Goroutines: Context Switch(cond.)
+
+Within 1 CPU
+
+Linux threads: 2.5 usecs
+
+	# -T threads, or processes
+	# bench the scheduler
+	taskset -c 0 perf bench sched pipe -T
+	# Running 'sched/pipe' benchmark:
+	# Executed 1000000 pipe operations between two threads
+
+	     Total time: 5.096 [sec]
+
+	       5.096776 usecs/op
+	         196202 ops/sec
+
+Goroutine: 0.232 usecs
+
+	BenchmarkContextSwitch1         10000000               232 ns/op
+	PASS
+	ok      _/home/frankie  2.559s
+
+* Channels: Share memory by communicating
+
+.image images/channels_operation.png
+
+* Goroutines: Context Switch(cond.)
+
+Two mechanisms can enhance your control over context switch 
+
+- runtime.Gosched(): yields control back to the scheduler
+- runtime.LockOSThread(): dedicates a real OS thread to this goroutine and no other, less competition
+
+* Channels
+
+- Panic: write closed, close closed, close nil
+- Block unexpectly: read nil, write nil, goroutine leak
+- Block: read empty, write full
+
+How can we avoid unexpected danger in a complicated system?
+
+* Channels Best Practice
+
+- Put channels in the right context is to assign channel ownership: seperate resposibility
+- Channel owner: Instantiates, write, close, pass ownership
+- Channel reader: Know when channel closed; handle block
+- Unidirectional channel can use to distinguish ownership
+# When it's necessary
+
+* Channels Best Practice
+
+.play -edit src/ownership.go 
+
+# Concurrency issue, really happy to discuss that
+
+* Context Package
+
+.image images/context.png
+
+Context should flow through all your goroutines
+
+* Select statement
+
+.play -edit src/select.go /func main/,/^}
+
+* Select: Main Msg Loop
+
+.code -edit src/dispatcher.go /START OMIT/,/END OMIT
+
+* Sync Package
+
+- WaitGroup
+- Mutex, RWMutex
+- Once
+- Cond
+- Map
+
+* WaitGroup 
+
+- Wait for a set of concurrent operations to complete
+- Don’t care about the result
+
+.code src/waitgroup.go
+
+* Mutex/RWMutex
+
+- Way to guard critical sections
+- Not support recursive lock
+- No ownership of lock, Unlock can be from different goroutine
+
+.code src/mutex_bench.go /START OMIT/,/END OMIT
+
+* Mutex/RWMutex 
+
+	go test -bench BenchmarkMute
+	10000 times: got 10000
+	1000000 times: got 1000000
+	2000000 times: got 2000000
+	2000000               922 ns/op
+
+Compared to no mutex: 387 ns/op
+
+* RWMutex
+
+- Reduce the cross-section of the critical section
+- Arbitrary number of readers can hold a reader lock so long as nothing else is holding a writer lock
+- Use RWMutex instead of Mutex when it logically makes sense
+
+* Conditional Variable
+
+Scenario: a group of goroutines waiting for a signal to continue
+
+Naive way
+
+	for conditionTrue() == false {
+	}
+
+Or: 
+	
+	for {
+		mutex.Lock()
+		cond := conditionTrue()
+		if cond == true {
+			mutex.UnLock()
+			// handle
+			return
+		}
+		mutex.UnLock()
+		time.Sleep(1*time.Millisecond)
+	}
+
+
+* Busy polling Loop
+
+# Two much CPU
+# cause goroutine not yield
+
+.play src/busy_loop.go /START OMIT/,/END OMIT/
+
+* Cond: the right way
+
+Similiar with pthread_cond_t in Linux
+
+.code src/cond_def.go
+
+* Cond: the right way
+	
+	var cond = sync.NewCond(&sync.Mutex{}) // init cond
+
+	cond.L.Lock() 
+	for !condition() {
+	    cond.Wait() // unlock after wait called, blocked
+	    // before wait wakeup and return, mutex locked
+	}
+	... make use of condition ...
+	cond.L.Unlock()
+
+Use cond in place: a set of goroutines wait to be notified
+
+* Cond: PubSub pattern
+
+.code src/broadcast.go /DEF_START/,/DEF_END/
+
+* Cond: PubSub pattern
+
+.play src/broadcast.go /USE_START/,/USE_END/
+
+* Cond Conclusion
+
+A set of runners(goroutines) waiting for a starting gun(signals)
+
+.image images/startline.png 400 _
+
+* Atomic
+
+Read/Write not interfered by other command
+
+.code src/atomic_bench.go
+
+	go test -bench BenchmarkAtomic
+	1000000 times: got 1000000
+	5000000 times: got 5000000
+	5000000               393 ns/op
+
+* Atomic
+
+Compare
+
+- No mutex: 387 ns/op
+- With Mutex: 922 ns/op
+
+Functions: 
+
+- Limited to integer and pointer
+- Load
+- Store
+- Increment/Decrement
+- CAS
+
+* Atomic internals
+
+	function cas(p : pointer to int, old : int, new : int) returns bool {
+	    if *p ≠ old {
+	        return false
+	    }
+	    *p ← new
+	    return true
+	}
+
+- Use machine instruction: CMPXCHG
+- Multiple processors: LOCKCMPXCHG, lock the bus first
+
+* Relationship between concurrency primitives
+
+Atomic(CAS) implemented Mutex
+
+	func (m *Mutex) Lock() {
+    // Fast path: grab unlocked mutex.
+    if atomic.CompareAndSwapInt32(&m.state, 0, mutexLocked) {
+        if race.Enabled {
+            race.Acquire(unsafe.Pointer(m))
+        }
+        return
+    }
+
+* Relationship between concurrency primitives
+
+Mutex implemented Channel
+
+	type hchan struct {
+		qcount   uint           // total data in the queue
+		dataqsiz uint           // size of the circular queue
+		buf      unsafe.Pointer // points to an array of dataqsiz elements
+		elemsize uint16
+		closed   uint32
+		elemtype *_type // element type
+		sendx    uint   // send index
+		recvx    uint   // receive index
+		recvq    waitq  // list of recv waiters
+		sendq    waitq  // list of send waiters
+		lock     mutex
+	}
+
+* Concurrency Conclusion
+
+.image images/decision_tree.png
+
+* Concurrency Conclusion
+
+- Use context to avoid goroutine leakage
+- If concurrency primitive is used, add -race flag to detect race condition
+- Use Mutex if task is simple, avoid hold and wait
+- Use RWMutex when logically make sense
+- Use cond when set of goroutines wait for a signal
+- Use Once to run init code
+- Use atomic to implement simple counter(or lock free queue, narrow critical section granularity)
+- Atomic MUST use in pairs: both read and write need atomic
+- Usually we don't need sync.Map: it's for reader far more than writers and r/w on different keys
+
+* Ultimate Book
+
+Concurrency in Go: Katherine Cox-Buday
+
+.image images/book.png 500 _
+
+* Topics I'm considering and interested
+
+* Concurrency Patterns
+
+Why
+
+- Elevates your thinking about architectures, let you think at pattern level
+- Recognize pattern, reuse experience not only code
+- Shared vocabulary
+
+Patterns
+
+- Pipeline
+- Fan-in Fan-out
+- Tee channel
+- Or-done channel
+- Bridge channel
+- Case study
+
+* Realtime Monitoring in Microservice System
+
+.image images/netdata.gif 600 _
+
+* Kubernetes 101
+
+Cloud native OS for containers
+
+- Easy to use, solid declarative configuration
+- Auto-heal, Scale
+- Easy deployment, rollout
+
+.image images/kubernetes.png 400 _
+
+* How we built a micro-service system
+
+- Important components in microservice system
+- Case study: call center
+- Architecture evolution to enable high availability
+
+.image images/callcenter.png

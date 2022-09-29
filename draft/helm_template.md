@@ -7,11 +7,14 @@
 
 *  include unexported template
 
+# advanced
+
 *  subchart如何传值: by example
 *  library chart 
 
-*  ArgoCD using Helm
 *  Helm provider
+*  ArgoCD using Helm
+
 
 
 # Helm
@@ -85,11 +88,8 @@ range 改变inner scope:
 >  Each time through the loop, . is set to the current pizza topping. That is, the first time, . is set to mushrooms. The second iteration it is set to cheese, and so on.
 
 
-Value override rule: 
 
-> The list above is in order of specificity: values.yaml is the default, which can be overridden by a parent chart's values.yaml, which can in turn be overridden by a user-supplied values file, which can in turn be overridden by --set parameters.
 
-[Values Files](https://helm.sh/docs/chart_template_guide/values_files/)  
 
 
 # Pipeline

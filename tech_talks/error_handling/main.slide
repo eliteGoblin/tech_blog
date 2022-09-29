@@ -1,0 +1,194 @@
+Error Propagation in Go
+24 Apr 2019
+
+Frank Sun
+Golang Developer
+elitegoblinrb@gmail.com
+http://elitegoblin.github.io
+
+* Roadmap
+
+- Customers of error handling(Why we need it)
+- Caller perspective: API error response
+- Developer perspective: how error propgate, structure error logs
+
+* Scope
+
+In scope: 
+
+- Error passing between services
+- Error propagation inside a service/process: between functions, go packages, go routines
+
+Out of scope: 
+
+- Panic handle
+
+* Customers of error handling
+
+- Caller of our API
+- Deveoper of service(Gophers)
+
+* Caller perspective: API error response
+
+# error get from black box
+
+Error response must be helpful on caller's perspective
+
+- HTTP Status Code
+- Internal Reference Code
+- Human readable messages
+
+* HTTP Status Code
+
+- 1XX – Informational
+- 2XX – Success
+- 3XX – Redirection
+- 4XX – Client Error: 404 Not Found, 429 Too many Requests
+- 5XX – Server Error: 502 Bad Gateway, 503 Service Unavailable
+
+Some company use Http 200 for almost all response(even error occured), use other reference code to indicate error
+
+* Internal Reference Code
+
+Business logic related error code, example: 
+
+800001 means insufficient credits when user try to make a call
+
+* Human readable messages
+
+Should contains: 
+
+- Cause
+- Summarized context
+- General solution for the error at hand
+
+* API error response example: 
+
+A error response
+
+.code -edit src/api_error_response.json
+
+A successful response
+
+.code src/api_success_response.json
+
+* Developer perspective
+
+How error flow through inside the service  
+
+Error flow should NOT be treated as second-class citizen as to control flow
+
+Goals:
+
+- Record whole error flow
+- Ability to retrieve it in log
+
+* Golang internal error support
+
+.code -edit src/errors.go
+
+* What we usually do
+
+.code -edit src/usual_way.go
+
+* Pain points
+
+No framework support, no standard way to pass the errors 
+
+Missing context when passing errors
+
+* What we should do
+
+- Always pass error back to caller
+- Add context: error propagate chain, each node's stacktrace in chain
+- When passing error back to caller, hide(not remove) details, optional
+
+* Propagate error up in control flow
+
+Avoid swallowing error
+
+.image images/chain.png 125 _
+
+* Add Context using pkg/errors
+
+- Simple error handling primitives
+- 4300+ stars, one maintainer from Google Golang team
+- Recommended by author of Concurrency in Go
+
+* pkg/errors
+
+- New(message string) error
+- Errorf(format string, args ...interface{}) error
+- Wrapf(err error, message string,  args ...interface{}) error
+- Cause(err error) error
+
+* pkg/errors example: New, Errorf
+
+.code -edit src/example_new.go
+
+* pkg/errors: New, Errorf
+
+- Leaf node of error tree
+- Should be closest to where error first occurs
+
+* pkg/errors: propagate error(relay)
+
+Wrap/Wrapf
+
+.code -edit src/example_wrap.go
+
+* pkg/errors: show stack
+
+.code -edit src/fn.go
+
+* pkg/errors: show cause
+
+.code -edit src/example_cause.go
+
+* pkg/errors: show stack
+
+.code -edit src/example_stack.go
+
+* Passing errors between goroutines?
+
+Same, use error channel to pass error back to caller
+
+* Typed error?
+
+Sometimes we need: 
+
+- Execute different code path by error returned
+- Check if wrapped error or raw error(should be seemed as code bug if we use pkg/errors)
+
+We can define our own error type(struct)
+
+.code -edit src/typed.go
+
+Author of Concurrency in Go suggested: we should defined error type in package level, each package wrap/format error escaped from current package(My idea is that only necessary for large projects)
+
+* Big picture of error handling
+
+.image images/error_handling_framework.png
+
+* Go2 proposal about error handling
+
+Try/catch mechanism to make code clean and robust
+
+.code src/go2.go
+
+* Conclusion
+
+- API response we consider: add additional error code; summaried, human readable message; attach traceId
+- Pass error back to root caller who log it, avoid swallowing error
+- Use pkg/errors to replace errors package to add more context
+- Use typed error with care, bottom line is do not create wrong dependency between packages
+
+
+* Reference
+
+Chapter 5 Concurrency at scale, section Error Propagation, Concurrency in Go by Katherine Cox-Buday  
+.link https://nordicapis.com/best-practices-api-error-handling/ Best Practices for API Error Handling  
+.link https://tools.ietf.org/html/rfc7807 RFC 7807: Problem Details for HTTP APIs
+.link https://github.com/pkg/errors/blob/master/example_test.go pkg/errors example
+.link https://go.googlesource.com/proposal/+/master/design/go2draft-error-handling-overview.md Error Handling — Problem Overview
+.link https://dave.cheney.net/2016/04/27/dont-just-check-errors-handle-them-gracefully Don’t just check errors, handle them gracefully

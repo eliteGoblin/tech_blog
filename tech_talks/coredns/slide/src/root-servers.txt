@@ -1,0 +1,27 @@
+/netinfo/root-servers.txt              Sep 95
+
+The following hosts are functioning as root domain name servers for
+the Internet:
+
+HOSTNAME             NET ADDRESSES      SERVER PROGRAM
+
+
+A.ROOT-SERVERS.NET   198.41.0.4         BIND (UNIX)	
+
+B.ROOT-SERVERS.NET   128.9.0.107        BIND (UNIX)
+
+C.ROOT-SERVERS.NET   192.33.4.12        BIND (UNIX)
+
+D.ROOT-SERVERS.NET   128.8.10.90        BIND (UNIX)
+
+E.ROOT-SERVERS.NET   192.203.230.10     BIND (UNIX)
+
+F.ROOT-SERVERS.NET   39.13.229.241      BIND (UNIX)
+
+G.ROOT-SERVERS.NET   192.112.36.4       BIND (UNIX)
+
+H.ROOT-SERVERS.NET   128.63.2.53        BIND (UNIX)
+
+I.ROOT-SERVERS.NET   192.36.148.17      BIND (UNIX)
+
+(End of File)

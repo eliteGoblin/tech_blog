@@ -1,0 +1,16 @@
+#START OMIT
+apiVersion: v1
+kind: Service
+metadata:
+  name: areas-svc
+  namespace: kepler-qa1-au1
+spec:
+  clusterIP: 100.67.251.157
+#END OMIT
+  ports:
+  - name: http-areas
+    port: 80
+    protocol: TCP
+    targetPort: 2022
+  selector:
+    component: areasapp

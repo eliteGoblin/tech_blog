@@ -1,0 +1,12 @@
+rules:
+- host:
+  http:
+    paths:
+    - path: /tiles/*
+      backend:
+        serviceName: tiles-svc
+        servicePort: 80
+    - path: /coverage/*
+      backend:
+        serviceName: coverage-svc
+        servicePort: 80

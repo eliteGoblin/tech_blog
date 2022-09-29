@@ -1,0 +1,12 @@
+kind: HorizontalPodAutoscaler
+apiVersion: autoscaling/v1
+metadata:
+  name: k8s-talks-scale
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: k8s-talks
+  minReplicas: 2
+  maxReplicas: 30
+  targetCPUUtilizationPercentage: 30

@@ -1,0 +1,323 @@
+# Self Introduction 
+
+04 May 2022
+
+Frank Sun
+Golang Developer, Infra
+frank.sun@gmail.com
+http://elitegoblin.github.io
+
+## About myself
+
+*  Microservice, Nearmap API 
+*  cloud architecture, distributed system.
+
+I am good at writing clean, well tested code; data structure design, object oriented programing. 
+
+I also like reading tech books, some of them are: AWS in action, Kuternetes in action, Agile Software Development: Principles, Patterns, and Practices, Concurrency in Go, Cryptography for Dummies, the docker book, prometheus up and running, Advanced Programming in Unix Environment, etc; non-tech books like: flow, deep working, micro habbits. 
+
+
+.link https://elitegoblin.github.io/archives/ My tech blogs
+.link https://elitegoblin.github.io/about/ Brownbag sessions I gave
+
+##  API team
+
+- Microservices: survey publish, job schedule/management, 
+- Architect: network, CICD, automated testing, monitoring, alert, logging mechanism
+- Infra/devops: Container Orchestration(k8s), AWS, IaC(Terraform), Ansible
+- Tech proposal, knowledge sharing
+
+##  Architect
+
+## Certified Solution Architect 
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20220504113215.png" alt="20220504113215" style="width:500px"/>
+
+*  159+hrs preparing
+*  Score 888/1000(720 pass)
+
+## Network
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20220504112827.png" alt="20220504112827" style="width:800px"/>
+
+## Network(continued)
+
+*  VPC, region
+*  AZ, Subnet, SecurityGroup
+*  NAT GW, IGW GW
+*  VPC peering, private link
+*  Route53
+
+## Common Services
+
+IaC using Terraform
+
+*  IAM
+*  SNS/SQS
+*  EC2, ASG, ELB, EBS
+*  KMS, Secret Manager
+*  RDS, ECache
+*  S3
+etc
+
+## Infra design & review
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20220504121655.png" alt="20220504121655" style="width:700px"/>
+
+## API Team tech stack
+
+## Infra
+
+*  One of infra goto person, "Cluster admin", across most of API team microservice infra(except legacy, GIS server, etc)
+*  Maintain PROD cluster: tackle issue(unhealthy cluster, ETCD issue), upgrade, backup
+*  Infra code maintainer
+
+## Infra knowledge sharing
+
+Ingress, Region Routing, IAM, DNS, etc
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20220504121218.png" alt="20220504121218" style="width:300px"/>
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20220504121326.png" alt="20220504121326" style="width:300px"/>
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20220504121346.png" alt="20220504121346" style="width:300px"/>
+
+## Container Orchestration(Kubernetes)
+
+Contributor to build cluster: 
+
+*  Hopper(EKS): key contributor
+*  Sagan(KOPS)
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20220504115556.png" alt="20220504115556" style="width:400px"/>  
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20220504115704.png" alt="20220504115704" style="width:400px"/>
+
+## Container Orchestration: job 
+
+*  Survey publishing
+*  3D exports
+*  Cron
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20220504115916.png" alt="20220504115916" style="width:500px"/>
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20220504120543.png" alt="20220504120543" style="width:500px"/>
+
+##  CICD(ArgoCD)
+
+app of apps pattern
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20220504112255.png" alt="20220504112255" style="width:400px"/>  
+
+exports service
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20220504112604.png" alt="20220504112604" style="width:400px"/>
+
+## Monitoring & Tracing
+
+Martin's "Datadog Dashboard as code"    
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20220504122340.png" alt="20220504122340" style="width:500px"/>
+
+Tracing: Open Telemetry  
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20220504124640.png" alt="20220504124640" style="width:500px"/>
+
+## Monitoring & Tracing(continued)
+
+Prometheus/Grafana
+
+Compute Resources  
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20220504123744.png" alt="20220504123744" style="width:500px"/>  
+
+Network  
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20220504124150.png" alt="20220504124150" style="width:500px"/>
+
+## Test frameworks
+
+*  Unit test
+*  Integration test
+*  E2E test: per release, cron.
+
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20220504124356.png" alt="20220504124356" style="width:300px"/>  
+<img src="https://raw.githubusercontent.com/eliteGoblin/images/master/blog/img/picgo/20220504124515.png" alt="20220504124515" style="width:300px"/>
+
+## Thinking, my interests
+
+
+## Logs
+
+
+*  Microservices
+
+* Roadmap
+
+- Big picture of my skills
+- Golang
+- Microservice
+- Coding: clean code, TDD, data structures...
+- Software design: clean architecture, OOP
+- Knowledge sharing
+- Problem Solving/Debugging
+- Major Projects
+- Interests
+
+* Big picture
+
+.link https://atlas.mindmup.com/2019/06/560850109b3811e9a95e6f9337d0d4d4/frank_sun/index.html skills mindmap 
+
+.image images/big_pictures.png 500 _
+
+* Golang
+
+- Strong Golang skills: concurrency, config management, command line, logging, etc
+- Golang best practice: log tracing, error propagation, project architecture, metric
+
+I've read:
+.image images/concurrency_in_go.png 400 _
+
+* Golang
+
+A test I took about Golang: 
+.image images/golang.png 400 _
+
+* Mircoservice
+
+- Familliar with common components
+- Build call-center microservice in Udesk
+- Build private cloud automation microservice in Macquarie
+
+I have read:
+.image images/newman.png
+
+* Coding
+
+- Familiar with common data structure and algorithms(leetcode 150+)
+- Clean code: pursue bugfree, clean code
+- TDD: good for design and testing 
+
+I have read:
+.image images/clean_code.png
+
+* Software design
+
+* clean architecture
+
+- Single direction dependency
+- Layered approach, decoupling
+- Dependency Injection
+
+.image images/clean_architecture.png
+
+* Object Oriented Design
+
+- SOLID principle
+- Common design patterns
+
+I've read:
+.image images/design_patterns.png
+
+* Monitoring
+
+Demo I previously built using Prometheus + Grafana
+
+.image images/golang_exporter.gif _ 1000
+
+* Monitoring
+
+Netdata：a case for how I identify a prod issue using netdata
+
+.image images/netdata_issue1.png _ 800
+
+* Knowledge sharing/mentoring
+
+Read book, write blogs, brownbag sessions:
+
+- Go Project Layout - Clean Architecture
+- Microservice Monitoring
+- Concurrency in Go
+- Error propagation in Go
+- Log Tracing in Go
+- ORM or NoORM
+- Cache solution suggestion: dynamodb
+
+.link https://elitegoblin.github.io/about/ Talk List inside team
+
+* System Debugging
+
+- Broken connection pool
+- Unstable freeswitch
+- Service deadlock: acd, cti main event distributor hang
+- Memory leakage: http client body, robot cache
+
+I've read part of book(CPU, ):
+
+.image images/system_performance.png
+
+* Major Projects
+
+* Call center microservice
+
+- 25,000 sip phones registered, over 300k calls made daily
+
+.image images/call_center.png
+
+* Call center microservice: Version 1
+
+.image images/version_1.png
+
+* Call center microservice: Version 2
+
+.image images/API_GATEWAY.png _ 800
+
+* Call center microservice: Version 2
+
+- Multiple instance of CTI, ACD, ADS, Freeswitch..
+- Effort to make CTI stateless: store sip phone state to redis
+
+* CTI SIP phone managment module
+
+.image images/sip_management.png
+
+* Implement FSM to agency state
+
+.image images/acd_revised.png _ 400
+
+* ADS's priority queue for multi-task
+
+.image images/ads_priority.png _ 600
+
+* Faq robot cache sharding
+
+- 700k queries daily
+- Enable route different companies to seperate nodes
+- Node liveness detection
+
+.image images/robot_sharding.png
+
+* ADS forcast module
+
+- Implement Forecast formula 
+- Based on past 30 minutes data
+- Layered, msg based system
+- 2500+ lines, over 90% coverage, no bugs found 
+
+.image images/ads_forcast.png _ 400
+
+* Private cloud automation 
+
+.image images/private_cloud_automation.png
+
+Implement cross cutting functions: error propagation, log tracing, metric interface
+
+* Interests, plan
+
+- Distributed system
+- AWS certificate
+- Service mesh
+- Keep writing blogs...
+
+* Machine learning 
+
+I took Dr Andrew Ng's machine learning course: 
+
+.image images/machine_learning.png

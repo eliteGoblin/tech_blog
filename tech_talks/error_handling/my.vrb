@@ -1,0 +1,17 @@
+\frametitle{Reference}
+
+
+Chapter 5 Concurrency at scale, section Error Propagation, Concurrency in Go by Katherine Cox-Buday
+
+
+\myblue{\href{https://nordicapis.com/best-practices-api-error-handling/}{\texttt{Best Practices for API Error Handling}}}
+
+\myblue{\href{https://tools.ietf.org/html/rfc7807}{\texttt{RFC 7807: Problem Details for HTTP APIs}}}
+
+\myblue{\href{https://github.com/pkg/errors/blob/master/example_test.go}{\texttt{pkg/errors example}}}
+
+\myblue{\href{https://go.googlesource.com/proposal/+/master/design/go2draft-error-handling-overview.md}{\texttt{Error Handling — Problem Overview}}}
+
+\myblue{\href{https://dave.cheney.net/2016/04/27/dont-just-check-errors-handle-them-gracefully}{\texttt{Don’t just check errors, handle them gracefully}}}
+
+
